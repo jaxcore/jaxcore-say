@@ -86,7 +86,7 @@ Processor.prototype.process = function (_event) {
 		outL[iBuffer] = inL[iBuffer];
 		outR[iBuffer] = inR[iBuffer];
 		
-		console.log('proc', inL[iBuffer], inR[iBuffer]);
+		// console.log('proc', inL[iBuffer], inR[iBuffer]);
 		
 		if (!this.paused) {
 			var x = (inL[iBuffer] + 1.0) * 0.5 * width;
@@ -141,7 +141,7 @@ class AudioScope extends EventEmitter {
 		super();
 		if (canvas) this.canvas = canvas;
 		
-		this.buffer = null;
+		// this.buffer = null;
 		this.source = null;
 		
 		this.isPlaying = false;
@@ -169,13 +169,13 @@ class AudioScope extends EventEmitter {
 		reader.readAsArrayBuffer(audioData);
 	}
 	
-	loadAudioData(audioContext, src, buffer) {
+	loadAudioData(audioContext, src) {
 		// let audio = new (window.AudioContext || window.webkitAudioContext)();
 		this.audio = audioContext;
 		this.source = src;
 		this.processor = new Processor(this.audio, this.canvas);
 		// this.processor.node.connect(this.audio.destination);
-		this.buffer = buffer;
+		// this.buffer = buffer;
 	}
 	
 	setAudioContext(audioContext) {
@@ -224,7 +224,8 @@ class AudioScope extends EventEmitter {
 		// 	console.log('isplaying');
 		// 	return;
 		// }
-		else if (this.buffer) {
+		
+		// else if (this.buffer) {
 			
 			console.log('pla y1 x');
 			
@@ -253,7 +254,7 @@ class AudioScope extends EventEmitter {
 			// 	app.stars.draw();
 			// },100);
 			// this.stars.start(this.starsRef.current, this.visRef.current);
-		}
+		// }
 	}
 	
 	disconnect() {
@@ -267,7 +268,7 @@ class AudioScope extends EventEmitter {
 		delete this.processor;
 		delete this.audio;
 		delete this.source;
-		delete this.buffer;
+		// delete this.buffer;
 		
 		console.log('disconnect');
 		this.emit('destroy');

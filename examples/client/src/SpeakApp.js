@@ -217,6 +217,17 @@ class SpeakApp extends Component {
 		this.sayIndex(spokenIndex);
 	}
 	
+	getBuffer(data, callback) {
+		let audioContext = new AudioContext();
+		let source = audioContext.createBufferSource();
+		audioContext.decodeAudioData(data, (buffer) => {
+			source.buffer = buffer;
+			callback(audioContext, source);
+		}, function(e) {
+			console.log('error', e);
+		});
+	}
+	
 	sayIndex(index) {
 		if (this.audioContext) {
 			console.log('context exists');
@@ -236,32 +247,60 @@ class SpeakApp extends Component {
 			language: saying.language
 		});
 		
-		
-		this.audioContext = new AudioContext();
-		const audioCtx = this.audioContext;
-		this.source = this.audioContext.createBufferSource();
-		const src = this.source;
-		
-		//alert('diconnect / reconnect not working');
-		
-		// this.scope = new AudioScope(this.canvasRef.current);
-		
-		const me = this;
-		audioCtx.decodeAudioData(data, function(buffer) {
-			src.buffer = buffer;
+		this.getBuffer(data, (audioContext, source) => {
 			
-			me.scope.on('destroy', () => {
-				delete src.buffer;
-				delete me.source;
-				delete me.audioContext;
-			});
 			
-			me.scope.loadAudioData(audioCtx, src, buffer);
+			// const dataR = speak.raw(saying.text, {
+			// 	profile: 'Cylon',
+			// 	intonation: saying.intonation,
+			// 	language: saying.language
+			// });
+			//
+			// this.getBuffer(dataR, (audioContextR, sourceR) => {
+			//
+			// 	this.scope.loadAudioData(audioContext, source);
+			//
+			// });
 			
-			me.scope.play(); //.start(0);
-		}, function(e) {
-			console.log('error', e);
+			// this.scope.once('destroy', () => {
+			// 	/*delete src.buffer;
+			// 	delete me.source;
+			// 	delete me.audioContext;*/
+			// });
+			
+			this.scope.loadAudioData(audioContext, source);
+			this.scope.play();
 		});
+		
+		
+		
+		
+		//
+		// this.audioContext = new AudioContext();
+		// const audioCtx = this.audioContext;
+		// this.source = this.audioContext.createBufferSource();
+		// const src = this.source;
+		//
+		// //alert('diconnect / reconnect not working');
+		//
+		// // this.scope = new AudioScope(this.canvasRef.current);
+		//
+		// const me = this;
+		// audioCtx.decodeAudioData(data, function(buffer) {
+		// 	src.buffer = buffer;
+		//
+		// 	me.scope.on('destroy', () => {
+		// 		delete src.buffer;
+		// 		delete me.source;
+		// 		delete me.audioContext;
+		// 	});
+		//
+		// 	me.scope.loadAudioData(audioCtx, src, buffer);
+		//
+		// 	me.scope.play(); //.start(0);
+		// }, function(e) {
+		// 	console.log('error', e);
+		// });
 		
 		// this.source.buffer = data;
 		// this.source.connect(this.context.destination);
