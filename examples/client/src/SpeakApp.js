@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Speak from 'jaxcore-speak';
+import MeterScope from './MeterScope';
 import AudioScope from './AudioScope';
 
 import ca from "mespeak/voices/ca.json";
@@ -67,7 +68,8 @@ class SpeakApp extends Component {
 	
 	
 	componentDidMount() {
-		this.scope = new AudioScope(this.canvasRef.current);
+		// this.scope = new AudioScope(this.canvasRef.current);
+		this.micScope = new MeterScope(this.canvasRef.current);
 	}
 	
 	render() {
@@ -268,8 +270,15 @@ class SpeakApp extends Component {
 			// 	delete me.audioContext;*/
 			// });
 			
-			this.scope.loadAudioData(audioContext, source);
-			this.scope.play();
+			// this.scope.loadAudioData(audioContext, source);
+			// this.scope.play();
+			
+			this.micScope.loadAudioData(audioContext, source);
+			
+			
+			
+			// debugger;
+			//debugger;
 		});
 		
 		
