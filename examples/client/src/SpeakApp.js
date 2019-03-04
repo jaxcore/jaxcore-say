@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Speak from 'jaxcore-speak';
-import MeterScope from './MeterScope';
-import AudioScope from './AudioScope';
+import {MonauralScope} from 'jaxcore-client';
+// import AudioScope from './AudioScope';
 
 import ca from "mespeak/voices/ca.json";
 import cs from "mespeak/voices/cs.json";
@@ -69,7 +69,7 @@ class SpeakApp extends Component {
 	
 	componentDidMount() {
 		// this.scope = new AudioScope(this.canvasRef.current);
-		this.micScope = new MeterScope(this.canvasRef.current);
+		this.monoScope = new MonauralScope(this.canvasRef.current);
 	}
 	
 	render() {
@@ -243,14 +243,19 @@ class SpeakApp extends Component {
 		// 	language: saying.language
 		// });
 		
-		const data = speak.raw(saying.text, {
+		// const data = speak.raw(saying.text, {
+		// 	profile: saying.profile,
+		// 	intonation: saying.intonation,
+		// 	language: saying.language
+		// });
+		//
+		// speak.getBuffer(data, (audioContext, source) => {
+		
+		speak.getAudioData(saying.text, {
 			profile: saying.profile,
 			intonation: saying.intonation,
 			language: saying.language
-		});
-		
-		this.getBuffer(data, (audioContext, source) => {
-			
+		}, (audioContext, source) => {
 			
 			// const dataR = speak.raw(saying.text, {
 			// 	profile: 'Cylon',
@@ -273,7 +278,7 @@ class SpeakApp extends Component {
 			// this.scope.loadAudioData(audioContext, source);
 			// this.scope.play();
 			
-			this.micScope.loadAudioData(audioContext, source);
+			this.monoScope.loadAudioData(audioContext, source);
 			
 			
 			
