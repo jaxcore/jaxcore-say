@@ -33,6 +33,32 @@ import tr from "mespeak/voices/tr.json";
 import zh from "mespeak/voices/zh.json";
 import zh_yue from "mespeak/voices/zh-yue.json";
 
+// Add a custom voice
+// Speak.addProfile({
+// 	"Francois": {
+// 		"name": "Francois",
+// 		"default": {
+// 			amplitude: 100,
+// 			wordgap: 1,
+// 			pitch: 40,
+// 			speed: 150,
+// 			variant: 'm7'
+// 		},
+// 		"high": {
+// 			pitch: 55
+// 		},
+// 		"low": {
+// 			pitch: 5
+// 		},
+// 		"slow": {
+// 			speed: 100
+// 		},
+// 		"fast": {
+// 			speed: 200
+// 		}
+// 	}
+// });
+
 let speak = new Speak({
 	languages: [ca, cs, de, en, en_n, en_rp, en_sc, en_us, en_wm, el, eo, es, es_la, fi, fr, hu, it, kn, la, lv, nl, pt, pt_pt, ro, sk, sv, tr, zh, zh_yue]
 });
@@ -48,7 +74,7 @@ class SpeakApp extends Component {
 		this.canvasRef = React.createRef();
 		
 		this.state = {
-			language: 'en/en-us',
+			language: 'en/en',
 			voiceProfile: 'Jack',
 			intonation: 'default',
 			text: '',
@@ -231,6 +257,10 @@ class SpeakApp extends Component {
 		});
 	}
 	
+	sayMultipart() {
+		speak.multipartData();
+	}
+	
 	sayIndex(index) {
 		if (this.audioContext) {
 			console.log('context exists');
@@ -244,18 +274,24 @@ class SpeakApp extends Component {
 		// 	language: saying.language
 		// });
 		
-		const data = speak.raw(saying.text, {
-			profile: saying.profile,
-			intonation: saying.intonation,
-			language: saying.language
-		});
+		// const data = speak.raw(saying.text, {
+		// 	profile: saying.profile,
+		// 	intonation: saying.intonation,
+		// 	language: saying.language
+		// });
 		
 		// this.getBuffer(data, (audioContext, source) => {
+		
+		let replacements = [
+			['Xenu', 'zee new'],
+			['Francois', 'zee new'],
+		];
 		
 		speak.getAudioData(saying.text, {
 			profile: saying.profile,
 			intonation: saying.intonation,
-			language: saying.language
+			language: saying.language,
+			replacements,
 		}, (audioContext, source) => {
 			
 			// const dataR = speak.raw(saying.text, {
