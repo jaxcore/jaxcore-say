@@ -33,8 +33,9 @@ import tr from "mespeak/voices/tr.json";
 import zh from "mespeak/voices/zh.json";
 import zh_yue from "mespeak/voices/zh-yue.json";
 
-let speak = new Speak(ca, cs, de, en, en_n, en_rp, en_sc, en_us, en_wm, el,
-	eo, es, es_la, fi, fr, hu, it, kn, la, lv, nl, pt, pt_pt, ro, sk, sv, tr, zh, zh_yue);
+let speak = new Speak({
+	languages: [ca, cs, de, en, en_n, en_rp, en_sc, en_us, en_wm, el, eo, es, es_la, fi, fr, hu, it, kn, la, lv, nl, pt, pt_pt, ro, sk, sv, tr, zh, zh_yue]
+});
 
 //speak.setLanguage("en/en-us");
 
@@ -243,13 +244,13 @@ class SpeakApp extends Component {
 		// 	language: saying.language
 		// });
 		
-		// const data = speak.raw(saying.text, {
-		// 	profile: saying.profile,
-		// 	intonation: saying.intonation,
-		// 	language: saying.language
-		// });
-		//
-		// speak.getBuffer(data, (audioContext, source) => {
+		const data = speak.raw(saying.text, {
+			profile: saying.profile,
+			intonation: saying.intonation,
+			language: saying.language
+		});
+		
+		// this.getBuffer(data, (audioContext, source) => {
 		
 		speak.getAudioData(saying.text, {
 			profile: saying.profile,
@@ -277,6 +278,7 @@ class SpeakApp extends Component {
 			
 			// this.scope.loadAudioData(audioContext, source);
 			// this.scope.play();
+			
 			
 			this.monoScope.loadAudioData(audioContext, source);
 			
