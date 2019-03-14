@@ -6076,11 +6076,6 @@ merge@^1.2.0:
   resolved "https://registry.yarnpkg.com/merge/-/merge-1.2.1.tgz#38bebf80c3220a8a487b6fcfb3941bb11720c145"
   integrity sha512-VjFo4P5Whtj4vsLzsYBu5ayHhoHJ0UqNm7ibvShmbmoz7tGi0vXaoJbGdB+GmDMLUdg8DpQXEIeVDAe8MaABvQ==
 
-mespeak@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/mespeak/-/mespeak-2.0.2.tgz#dff76ac51c1f9373c2306a5c19b17c4c20323869"
-  integrity sha1-3/dqxRwfk3PCMGpcGbF8TCAyOGk=
-
 methods@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
@@ -8750,6 +8745,11 @@ sockjs@0.3.19:
   dependencies:
     faye-websocket "^0.10.0"
     uuid "^3.0.1"
+
+soundbank-reverb@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/soundbank-reverb/-/soundbank-reverb-1.1.2.tgz#b81b29760b7907b8c8bae10c0d9133d8ec64fbf7"
+  integrity sha1-uBspdgt5B7jIuuEMDZEz2Oxk+/c=
 
 source-list-map@^2.0.0:
   version "2.0.1"

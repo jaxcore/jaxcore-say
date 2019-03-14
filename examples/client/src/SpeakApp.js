@@ -3,6 +3,8 @@ import Speak from 'jaxcore-speak';
 import {MonauralScope} from 'jaxcore-client';
 // import AudioScope from './AudioScope';
 
+import Reverb from 'soundbank-reverb';
+
 import ca from "mespeak/voices/ca.json";
 import cs from "mespeak/voices/cs.json";
 import de from "mespeak/voices/de.json";
@@ -66,6 +68,7 @@ let speak = new Speak({
 //speak.setLanguage("en/en-us");
 
 global.speak = speak;
+global._Speak = Speak;
 
 class SpeakApp extends Component {
 	constructor() {
@@ -283,8 +286,7 @@ class SpeakApp extends Component {
 		// this.getBuffer(data, (audioContext, source) => {
 		
 		let replacements = [
-			['Xenu', 'zee new'],
-			['Francois', 'zee new'],
+			['Xenu', 'zee new']
 		];
 		
 		speak.getAudioData(saying.text, {
@@ -293,6 +295,19 @@ class SpeakApp extends Component {
 			language: saying.language,
 			replacements,
 		}, (audioContext, source) => {
+			
+			
+			// didn't work
+			// var reverb = Reverb(audioContext)
+			// reverb.connect(audioContext.destination);
+			//
+			// reverb.time = 7 //seconds
+			// reverb.wet.value = 0.9;
+			// reverb.dry.value = 1;
+			//
+			// reverb.filterType = 'lowpass';
+			// reverb.cutoff.value = 10; //Hz
+			
 			
 			// const dataR = speak.raw(saying.text, {
 			// 	profile: 'Cylon',
@@ -374,6 +389,11 @@ class SpeakApp extends Component {
 		this.setState({
 			text: e.target.value
 		});
+	}
+	
+	daisybell() {
+		// _Speak.meSpeak.speak('day', {variant:'m4', pitch:70, speed:100})
+		// _Speak.meSpeak.speak('zee', {variant:'m4', pitch:50, speed:100})
 	}
 }
 
