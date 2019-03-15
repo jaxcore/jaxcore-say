@@ -1,9 +1,6 @@
 import React, {Component} from 'react';
 import Speak from 'jaxcore-speak';
 import {MonauralScope} from 'jaxcore-client';
-// import AudioScope from './AudioScope';
-
-import Reverb from 'soundbank-reverb';
 
 import ca from "mespeak/voices/ca.json";
 import cs from "mespeak/voices/cs.json";
@@ -35,6 +32,8 @@ import tr from "mespeak/voices/tr.json";
 import zh from "mespeak/voices/zh.json";
 import zh_yue from "mespeak/voices/zh-yue.json";
 
+global.Speak = Speak;
+
 // Add a custom voice
 // Speak.addProfile({
 // 	"Francois": {
@@ -65,10 +64,26 @@ let speak = new Speak({
 	languages: [ca, cs, de, en, en_n, en_rp, en_sc, en_us, en_wm, el, eo, es, es_la, fi, fr, hu, it, kn, la, lv, nl, pt, pt_pt, ro, sk, sv, tr, zh, zh_yue]
 });
 
+
+
+/*
+input = TextToPhonemes("hello world")
+// SamSpeak(input, {})
+data = SamProcess(input, options);
+var buffer = new Float32Array(data.length);
+  for(var i=0; i < data.length; i++) {
+    buffer[i] = (data[i] - 128) / 256;
+  }
+context = new AudioContext();
+SamPlay(context, buffer)
+ */
+
+
+//sam.speak('Hello world');
+
 //speak.setLanguage("en/en-us");
 
 global.speak = speak;
-global._Speak = Speak;
 
 class SpeakApp extends Component {
 	constructor() {
@@ -77,10 +92,10 @@ class SpeakApp extends Component {
 		this.canvasRef = React.createRef();
 		
 		this.state = {
-			language: 'en/en',
-			voiceProfile: 'Jack',
+			profile: 'Jack',
 			intonation: 'default',
 			text: '',
+			language: 'en/en',
 			spoken: [
 				{
 					profile: 'Jack',
@@ -154,7 +169,15 @@ class SpeakApp extends Component {
 	
 	clickSpoken(e, i) {
 		e.preventDefault();
+		const o = this.state.spoken[i];
 		this.sayIndex(i);
+		this.setState({
+			text: o.text,
+			profile: o.profile,
+			intonation:o.intonation,
+			language: o.language
+		});
+		
 	}
 	
 	onKeyDown(e) {
@@ -209,15 +232,15 @@ class SpeakApp extends Component {
 			o.push((<option key={p} value={p}>{p}</option>));
 		}
 		
-		return (<select onChange={e => this.selectProfile(e)} value={this.state.voiceProfile}>
+		return (<select onChange={e => this.selectProfile(e)} value={this.state.profile}>
 			{o}
 		</select>);
 	}
 	
 	selectProfile(e) {
-		let voiceProfile = e.target.options[e.target.selectedIndex].value;
+		let profile = e.target.options[e.target.selectedIndex].value;
 		this.setState({
-			voiceProfile
+			profile
 		});
 		
 	}
@@ -226,7 +249,7 @@ class SpeakApp extends Component {
 		const text = this.state.text;
 		if (text.length === 0) return;
 		
-		const profile = this.state.voiceProfile;
+		const profile = this.state.profile;
 		const intonation = this.state.intonation;
 		const language = this.state.language;
 		
@@ -247,6 +270,11 @@ class SpeakApp extends Component {
 		});
 		
 		this.sayIndex(spokenIndex);
+	}
+	
+	saySam() {
+		speak.setProfile('Sam');
+		speak.speak('Hello world');
 	}
 	
 	getBuffer(data, callback) {
@@ -271,30 +299,19 @@ class SpeakApp extends Component {
 		}
 		
 		const saying = this.state.spoken[index];
-		// speak.speak(saying.text, {
-		// 	profile: saying.profile,
-		// 	intonation: saying.intonation,
-		// 	language: saying.language
-		// });
-		
-		// const data = speak.raw(saying.text, {
-		// 	profile: saying.profile,
-		// 	intonation: saying.intonation,
-		// 	language: saying.language
-		// });
-		
-		// this.getBuffer(data, (audioContext, source) => {
 		
 		let replacements = [
 			['Xenu', 'zee new']
 		];
 		
-		speak.getAudioData(saying.text, {
+		const options = {
 			profile: saying.profile,
 			intonation: saying.intonation,
 			language: saying.language,
 			replacements,
-		}, (audioContext, source) => {
+		};
+		
+		speak.getAudioData(saying.text, options, (audioContext, source) => {
 			
 			
 			// didn't work

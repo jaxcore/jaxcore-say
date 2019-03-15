@@ -12,6 +12,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "mespeak": "^2.0.2"
+    "mespeak": "^2.0.2",
+    "sam-js": "^0.0.2"
   }
 }
