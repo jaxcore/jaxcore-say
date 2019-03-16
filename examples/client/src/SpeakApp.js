@@ -2,35 +2,35 @@ import React, {Component} from 'react';
 import Speak from 'jaxcore-speak';
 import {MonauralScope} from 'jaxcore-client';
 
-import ca from "mespeak/voices/ca.json";
-import cs from "mespeak/voices/cs.json";
-import de from "mespeak/voices/de.json";
-import en from "mespeak/voices/en/en.json";
-import en_n from "mespeak/voices/en/en-n.json";
-import en_rp from "mespeak/voices/en/en-rp.json";
-import en_sc from "mespeak/voices/en/en-sc.json";
-import en_us from "mespeak/voices/en/en-us.json";
-import en_wm from "mespeak/voices/en/en-wm.json";
-import el from "mespeak/voices/el.json";
-import eo from "mespeak/voices/eo.json";
-import es from "mespeak/voices/es.json";
-import es_la from "mespeak/voices/es-la.json";
-import fi from "mespeak/voices/fi.json";
-import fr from "mespeak/voices/fr.json";
-import hu from "mespeak/voices/hu.json";
-import it from "mespeak/voices/it.json";
-import kn from "mespeak/voices/kn.json";
-import la from "mespeak/voices/la.json";
-import lv from "mespeak/voices/lv.json";
-import nl from "mespeak/voices/nl.json";
-import pt from "mespeak/voices/pt.json";
-import pt_pt from "mespeak/voices/pt-pt.json";
-import ro from "mespeak/voices/ro.json";
-import sk from "mespeak/voices/sk.json";
-import sv from "mespeak/voices/sv.json";
-import tr from "mespeak/voices/tr.json";
-import zh from "mespeak/voices/zh.json";
-import zh_yue from "mespeak/voices/zh-yue.json";
+import ca from "jaxcore-speak/voices/ca.json";
+import cs from "jaxcore-speak/voices/cs.json";
+import de from "jaxcore-speak/voices/de.json";
+import en from "jaxcore-speak/voices/en/en.json";
+import en_n from "jaxcore-speak/voices/en/en-n.json";
+import en_rp from "jaxcore-speak/voices/en/en-rp.json";
+import en_sc from "jaxcore-speak/voices/en/en-sc.json";
+import en_us from "jaxcore-speak/voices/en/en-us.json";
+import en_wm from "jaxcore-speak/voices/en/en-wm.json";
+import el from "jaxcore-speak/voices/el.json";
+import eo from "jaxcore-speak/voices/eo.json";
+import es from "jaxcore-speak/voices/es.json";
+import es_la from "jaxcore-speak/voices/es-la.json";
+import fi from "jaxcore-speak/voices/fi.json";
+import fr from "jaxcore-speak/voices/fr.json";
+import hu from "jaxcore-speak/voices/hu.json";
+import it from "jaxcore-speak/voices/it.json";
+import kn from "jaxcore-speak/voices/kn.json";
+import la from "jaxcore-speak/voices/la.json";
+import lv from "jaxcore-speak/voices/lv.json";
+import nl from "jaxcore-speak/voices/nl.json";
+import pt from "jaxcore-speak/voices/pt.json";
+import pt_pt from "jaxcore-speak/voices/pt-pt.json";
+import ro from "jaxcore-speak/voices/ro.json";
+import sk from "jaxcore-speak/voices/sk.json";
+import sv from "jaxcore-speak/voices/sv.json";
+import tr from "jaxcore-speak/voices/tr.json";
+import zh from "jaxcore-speak/voices/zh.json";
+import zh_yue from "jaxcore-speak/voices/zh-yue.json";
 
 global.Speak = Speak;
 
@@ -99,14 +99,14 @@ global.voice = voice;
 // test generated code:
 /*
 import Speak from 'jaxcore-speak';
-import en_us from "mespeak/voices/en/en-us.json";
+import en_us from "jaxcore-speak/voices/en/en-us.json";
 Speak.addLanguages(en_us);
 let voice = new Speak({
 	profile: 'Cylon',
-	language: 'es'
+	language: 'en/en-us'
 });
 voice.speak('hola mi nombre es Cylon', {
-	intonation: 'low'
+	low: true
 });
 */
 
@@ -119,14 +119,16 @@ class SpeakApp extends Component {
 		
 		this.state = {
 			profile: 'Jack',
-			intonation: 'default',
+			speed: 'default',
+			pitch: 'default',
 			text: '',
 			language: 'en/en',
 			languageEnabled: true,
 			spoken: [
 				{
 					profile: 'Jack',
-					intonation: 'default',
+					speed: 'default',
+					pitch: 'default',
 					text: 'Hello World',
 					language: 'en/en-us'
 				}
@@ -156,7 +158,10 @@ class SpeakApp extends Component {
 					Voice Profile: {this.renderProfileSelect()}
 				</div>
 				<div>
-					Intonation: {this.renderIntonationSelect()}
+					Speed: {this.renderSpeedSelect()}
+				</div>
+				<div>
+					Pitch: {this.renderPitchSelect()}
 				</div>
 				<div>
 					Language: {this.renderLanguageSelect()}
@@ -170,7 +175,7 @@ class SpeakApp extends Component {
 				
 				<ul>
 					{this.state.spoken.map((s, i) => {
-						return (<li key={i}><a href="/" onClick={e => this.clickSpoken(e, i)}>{s.text}</a> ({s.profile} {s.intonation})</li>);
+						return (<li key={i}><a href="/" onClick={e => this.clickSpoken(e, i)}>{s.text}</a> ({s.profile} {s.speed} {s.pitch})</li>);
 					})}
 				</ul>
 				
@@ -209,7 +214,8 @@ class SpeakApp extends Component {
 		this.setState({
 			text: o.text,
 			profile: o.profile,
-			intonation:o.intonation,
+			speed: o.speed,
+			pitch: o.pitch,
 			language: o.language
 		}, () => {
 			this.updateCode(i);
@@ -258,34 +264,60 @@ class SpeakApp extends Component {
 		});
 	}
 	
-	renderIntonationSelect() {
-		return (<select onChange={e => this.selectIntonation(e)} value={this.state.intonation}>
+	renderSpeedSelect() {
+		return (<select onChange={e => this.selectSpeed(e)} value={this.state.speed}>
 			<option value="default">default</option>
-			<option value="low">low</option>
-			<option value="high">high</option>
 			<option value="fast">fast</option>
 			<option value="slow">slow</option>
 		</select>);
 	}
+	renderPitchSelect() {
+		return (<select onChange={e => this.selectPitch(e)} value={this.state.pitch}>
+			<option value="default">default</option>
+			<option value="low">low</option>
+			<option value="high">high</option>
+		</select>);
+	}
 	
-	selectIntonation(e) {
-		let intonation = e.target.options[e.target.selectedIndex].value;
+	selectPitch(e) {
+		let pitch = e.target.options[e.target.selectedIndex].value;
 		this.setState({
-			intonation
+			pitch
+		}, () => {
+			this.updateCode();
+		});
+	}
+	selectSpeed(e) {
+		let speed = e.target.options[e.target.selectedIndex].value;
+		this.setState({
+			speed
 		}, () => {
 			this.updateCode();
 		});
 	}
 	
 	renderProfileSelect() {
-		let o = [];
-		
+		let espeak = [];
 		for (let p in voice.profiles) {
-			o.push((<option key={p} value={p}>{p}</option>));
+			if (Speak.profiles[p].engine === 'espeak') {
+				espeak.push((<option key={p} value={p}>{p}</option>));
+			}
+		}
+		
+		let sam = [];
+		for (let p in voice.profiles) {
+			if (Speak.profiles[p].engine === 'sam') {
+				sam.push((<option key={p} value={p}>{p}</option>));
+			}
 		}
 		
 		return (<select onChange={e => this.selectProfile(e)} value={this.state.profile}>
-			{o}
+			<optgroup label="- ESpeak Voices -">
+				{espeak}
+			</optgroup>
+			<optgroup label="- SAM Voices -">
+				{sam}
+			</optgroup>
 		</select>);
 	}
 	
@@ -305,12 +337,14 @@ class SpeakApp extends Component {
 		if (text.length === 0) return;
 		
 		const profile = this.state.profile;
-		const intonation = this.state.intonation;
+		const speed = this.state.speed;
+		const pitch = this.state.pitch;
 		const language = this.state.language;
 		
 		const saying = {
 			text,
-			intonation,
+			speed,
+			pitch,
 			language,
 			profile
 		};
@@ -332,11 +366,6 @@ class SpeakApp extends Component {
 	}
 	
 	sayIndex(index) {
-		if (this.audioContext) {
-			console.log('context exists');
-			return;
-		}
-		
 		const saying = this.state.spoken[index];
 		
 		let replacements = [];
@@ -348,19 +377,32 @@ class SpeakApp extends Component {
 		
 		const options = {
 			profile: saying.profile,
-			// intonation: saying.intonation,
 			language: saying.language,
 			replacements,
 		};
-		if (saying.intonation !== 'default') options[saying.intonation] = true;
+		if (saying.speed !== 'default') options[saying.speed] = true;
+		if (saying.pitch !== 'default') options[saying.pitch] = true;
 		
+		this.colors = {
+			Jack: '255,0,0',
+			Pris: '255,255,0',
+			Roy: '0,255,0',
+			Xenu: '255,0,255',
+			Cylon: '255,255,0',
+			Leon: '128,0,0',
+			Rachel: '128,128,0',
+			Zhora: '0,128,0',
+			Sam: '0,128,128',
+			Elf: '128,0,128',
+			Robo: '255,0,128',
+			Granny: '255,128,0'
+		};
+		let color = this.colors[saying.profile] || '0,0,255';
 		
-		// this.monoScope.setTheme({
-		// 	color: 'orange',
-		// 	// clipColor: 'white',
-		// 	// background: 'black'
-		// });
-		// speak.setVisualizer(this.monoScope);
+		this.monoScope.theme.strokeColor = 'rgb('+color+')';
+		this.monoScope.theme.clipColor = 'black';
+		this.monoScope.theme.fillColor = 'rgba('+color+',0.2)';
+		this.monoScope.theme.dotColor = 'rgb('+color+')';
 		
 		voice.speak(saying.text, options);
 		
@@ -441,7 +483,7 @@ class SpeakApp extends Component {
 		let lang = '';
 		let langimport = '';
 		if (Speak.profiles[saying.profile].engine === 'espeak') {
-			langimport = "import "+voice_uid+" from \"mespeak/voices/"+voice_id+".json\";\n" +
+			langimport = "import "+voice_uid+" from \"jaxcore-speak/voices/"+voice_id+".json\";\n" +
 			"Speak.addLanguages("+voice_uid+");\n";
 			lang = "\tlanguage: \"" + saying.language + "\"\n";
 		}
@@ -453,15 +495,19 @@ class SpeakApp extends Component {
 			"\tprofile: \""+saying.profile+"\",\n" +
 			lang+
 			"});\n";
-		if (saying.intonation !== 'default') {
-			const intonations = saying.intonation+": true";
-			s += "voice.speak(\""+saying.text+"\", {\n" +
-			"  " + intonations +"\n"+
-			"});";
-		}
-		else {
+		
+		if (saying.speed === 'default' && saying.pitch === 'default') {
 			s += "voice.speak(\""+saying.text+"\");";
 		}
+		else {
+			let intonations = [];
+			if (saying.speed !== 'default') intonations.push("  " + saying.speed+": true");
+			if (saying.pitch !== 'default') intonations.push("  " + saying.pitch+": true");
+			s += "voice.speak(\""+saying.text+"\", {\n" +
+				intonations.join(",\n")+"\n"+
+				"});";
+		}
+		
 		return s;
 	}
 }
