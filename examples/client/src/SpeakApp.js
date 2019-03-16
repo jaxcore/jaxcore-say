@@ -142,6 +142,7 @@ class SpeakApp extends Component {
 	componentDidMount() {
 		this.updateCode();
 		this.monoScope = new MonauralScope(this.canvasRef.current);
+		voice.setVisualizer(this.monoScope);
 	}
 	
 	render() {
@@ -343,7 +344,6 @@ class SpeakApp extends Component {
 		// this is so the names are pronounced properly (eg. Priss instead of Pris)
 		if (Speak.profiles[saying.profile].phoneticName) {
 			replacements.push([saying.profile, Speak.profiles[saying.profile].phoneticName]);
-			debugger;
 		}
 		
 		const options = {
@@ -361,7 +361,7 @@ class SpeakApp extends Component {
 		// 	// background: 'black'
 		// });
 		// speak.setVisualizer(this.monoScope);
-		voice.visualizer = this.monoScope;
+		
 		voice.speak(saying.text, options);
 		
 		
