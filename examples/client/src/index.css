@@ -1,3 +1,9 @@
 body, button, input, select{
-  font-size: 20px;
+  font-size: 18px;
 }
+
+pre {
+  font-size: 15px;
+  color: #005555;
+}
+

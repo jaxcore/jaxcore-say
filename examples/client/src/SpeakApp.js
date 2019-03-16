@@ -34,56 +34,82 @@ import zh_yue from "mespeak/voices/zh-yue.json";
 
 global.Speak = Speak;
 
-// Add a custom voice
-// Speak.addProfile({
-// 	"Francois": {
-// 		"name": "Francois",
-// 		"default": {
-// 			amplitude: 100,
-// 			wordgap: 1,
-// 			pitch: 40,
-// 			speed: 150,
-// 			variant: 'm7'
-// 		},
-// 		"high": {
-// 			pitch: 55
-// 		},
-// 		"low": {
-// 			pitch: 5
-// 		},
-// 		"slow": {
-// 			speed: 100
-// 		},
-// 		"fast": {
-// 			speed: 200
-// 		}
-// 	}
-// });
-
-let speak = new Speak({
-	languages: [ca, cs, de, en, en_n, en_rp, en_sc, en_us, en_wm, el, eo, es, es_la, fi, fr, hu, it, kn, la, lv, nl, pt, pt_pt, ro, sk, sv, tr, zh, zh_yue]
+// Add a custom ESpeak voice
+Speak.addProfile({
+	"Custom Voice 1": {
+		"name": "Custom Voice 1",
+		"engine": "espeak",
+		"default": {
+			amplitude: 100,
+			wordgap: 1,
+			pitch: 40,
+			speed: 150,
+			variant: 'm7'
+		},
+		"high": {
+			pitch: 55
+		},
+		"low": {
+			pitch: 5
+		},
+		"slow": {
+			speed: 100
+		},
+		"fast": {
+			speed: 200
+		}
+	}
 });
 
+// Add a custom SAM voice
+// Note: in SAM the pitch and speed is inverted relative to ESpeak (eg. use higher pitch number for a deep voice)
+Speak.addProfile({
+	"Custom Voice 2": {
+		"name": "Custom Voice 2",
+		"engine": "sam",
+		"default": {
+			speed: 82,
+			pitch: 72,
+			throat: 110,
+			mouth: 105
+		},
+		"high": {
+			pitch: 50
+		},
+		"low": {
+			pitch: 100
+		},
+		"slow": {
+			speed: 130
+		},
+		"fast": {
+			speed: 60
+		}
+	}
+});
 
+Speak.addLanguages(ca, cs, de, en, en_n, en_rp, en_sc, en_us, en_wm, el, eo, es, es_la, fi, fr, hu, it, kn, la, lv, nl, pt, pt_pt, ro, sk, sv, tr, zh, zh_yue);
 
-/*
-input = TextToPhonemes("hello world")
-// SamSpeak(input, {})
-data = SamProcess(input, options);
-var buffer = new Float32Array(data.length);
-  for(var i=0; i < data.length; i++) {
-    buffer[i] = (data[i] - 128) / 256;
-  }
-context = new AudioContext();
-SamPlay(context, buffer)
- */
-
-
-//sam.speak('Hello world');
-
-//speak.setLanguage("en/en-us");
-
+let speak = new Speak({
+	language: 'en_us'
+});
 global.speak = speak;
+
+
+// test generated code:
+/*
+import Speak from 'jaxcore-speak';
+import en_us from "mespeak/voices/en/en-us.json";
+Speak.addLanguages(en_us);
+let voice = new Speak({
+	profile: 'Cylon',
+	language: 'es'
+});
+voice.speak('hola mi nombre es Cylon', {
+	intonation: 'low'
+});
+*/
+
 
 class SpeakApp extends Component {
 	constructor() {
@@ -96,6 +122,7 @@ class SpeakApp extends Component {
 			intonation: 'default',
 			text: '',
 			language: 'en/en',
+			languageEnabled: true,
 			spoken: [
 				{
 					profile: 'Jack',
@@ -103,24 +130,23 @@ class SpeakApp extends Component {
 					text: 'Hello World',
 					language: 'en/en-us'
 				}
-			]
+			],
+			spokenIndex: null,
+			code: '',
+			viewCode: false
 		};
 		
 		global.app = this;
-		
-		
 	}
 	
-	
 	componentDidMount() {
-		// this.scope = new AudioScope(this.canvasRef.current);
+		this.updateCode();
 		this.monoScope = new MonauralScope(this.canvasRef.current);
 	}
 	
 	render() {
 		return (
 			<div>
-				
 				<div>
 					<canvas ref={this.canvasRef} width="300" height="300"/>
 				</div>
@@ -136,29 +162,37 @@ class SpeakApp extends Component {
 				</div>
 				
 				<div>
-					<input size="40" placeholder="Type something then press Enter" onKeyDown={e => this.onKeyDown(e)}
+					<input size="40" placeholder="Type something then press Enter" onKeyUp={e => this.onKeyUp(e)}
 						   onChange={e => this.onChangeText(e)} value={this.state.text}/>
+					<button onClick={e => this.sayText()}>Speak</button>
 				</div>
-				
-				{/*<button onClick={e=>this.sayText()}>Speak</button>*/}
 				
 				<ul>
 					{this.state.spoken.map((s, i) => {
-						return (<li key={i}><a href="/" onClick={e => this.clickSpoken(e, i)}>{s.text}</a></li>);
+						return (<li key={i}><a href="/" onClick={e => this.clickSpoken(e, i)}>{s.text}</a> ({s.profile} {s.intonation})</li>);
 					})}
 				</ul>
 				
 				<div>
-					<button onClick={e => this.playAll()}>Play All (Multipart)</button>
 					<button onClick={e => this.clear()}>Clear</button>
 				</div>
-			
+				
+				<br/>
+				
+				<div>
+					<button onClick={e => this.setState({viewCode:!this.state.viewCode})}>
+						{this.state.viewCode? 'Hide Code':'View Code'}
+					</button>
+				</div>
+				{this.renderCode()}
 			</div>
 		);
 	}
 	
-	playAll() {
-	
+	renderCode() {
+		if (this.state.viewCode) {
+			return (<pre>{this.state.code}</pre>);
+		}
 	}
 	
 	clear(e) {
@@ -176,35 +210,50 @@ class SpeakApp extends Component {
 			profile: o.profile,
 			intonation:o.intonation,
 			language: o.language
+		}, () => {
+			this.updateCode(i);
 		});
-		
 	}
 	
-	onKeyDown(e) {
+	onKeyUp(e) {
 		if (e.keyCode === 13) { // Enter
 			e.preventDefault();
 			this.sayText();
 			return;
 		}
+		this.updateCode();
 		console.log('keydown', e);
-		
 	}
 	
 	renderLanguageSelect() {
-		
-		const o = speak.languages.map((lang, i) => {
-			return (<option key={i} value={lang}>{speak.getLanguageName(lang)}</option>);
-		});
-		
-		return (<select onChange={e => this.selectLanguage(e)} value={this.state.language}>
-			{o}
-		</select>);
+		if (this.state.languageEnabled) {
+			const o = [];
+			for (let lang in Speak.languages) {
+				o.push(<option key={lang} value={lang}>{Speak.languageIds[lang]}</option>);
+			}
+			return (<select onChange={e => this.selectLanguage(e)} value={this.state.language}>
+				{o}
+			</select>);
+		}
+		else {
+			return "none";
+		}
 	}
 	
 	selectLanguage(e) {
 		let language = e.target.options[e.target.selectedIndex].value;
 		this.setState({
 			language
+		}, () => {
+			this.updateCode();
+		});
+	}
+	
+	updateCode(i) {
+		if (typeof i === 'undefined') i = null;
+		const code = this.generateCode(i);
+		this.setState({
+			code
 		});
 	}
 	
@@ -222,6 +271,8 @@ class SpeakApp extends Component {
 		let intonation = e.target.options[e.target.selectedIndex].value;
 		this.setState({
 			intonation
+		}, () => {
+			this.updateCode();
 		});
 	}
 	
@@ -238,11 +289,14 @@ class SpeakApp extends Component {
 	}
 	
 	selectProfile(e) {
-		let profile = e.target.options[e.target.selectedIndex].value;
+		const profile = e.target.options[e.target.selectedIndex].value;
+		const languageEnabled = Speak.profiles[profile].engine === 'espeak';
 		this.setState({
-			profile
+			profile,
+			languageEnabled
+		}, () => {
+			this.updateCode();
 		});
-		
 	}
 	
 	sayText() {
@@ -260,36 +314,20 @@ class SpeakApp extends Component {
 			profile
 		};
 		
+		this.updateCode();
+		
 		const spoken = this.state.spoken;
 		const spokenIndex = this.state.spoken.length;
 		spoken.push(saying);
 		
 		this.setState({
 			spoken,
+			spokenIndex,
 			text: ''
 		});
 		
 		this.sayIndex(spokenIndex);
-	}
-	
-	saySam() {
-		speak.setProfile('Sam');
-		speak.speak('Hello world');
-	}
-	
-	getBuffer(data, callback) {
-		let audioContext = new AudioContext();
-		let source = audioContext.createBufferSource();
-		audioContext.decodeAudioData(data, (buffer) => {
-			source.buffer = buffer;
-			callback(audioContext, source);
-		}, function(e) {
-			console.log('error', e);
-		});
-	}
-	
-	sayMultipart() {
-		speak.multipartData();
+		
 	}
 	
 	sayIndex(index) {
@@ -306,111 +344,64 @@ class SpeakApp extends Component {
 		
 		const options = {
 			profile: saying.profile,
-			intonation: saying.intonation,
+			// intonation: saying.intonation,
 			language: saying.language,
 			replacements,
 		};
+		if (saying.intonation !== 'default') options[saying.intonation] = true;
+		
+		// this.monoScope.setTheme({
+		// 	color: 'orange',
+		// 	// clipColor: 'white',
+		// 	// background: 'black'
+		// });
+		// speak.setVisualizer(this.monoScope);
 		
 		speak.getAudioData(saying.text, options, (audioContext, source) => {
-			
-			
-			// didn't work
-			// var reverb = Reverb(audioContext)
-			// reverb.connect(audioContext.destination);
-			//
-			// reverb.time = 7 //seconds
-			// reverb.wet.value = 0.9;
-			// reverb.dry.value = 1;
-			//
-			// reverb.filterType = 'lowpass';
-			// reverb.cutoff.value = 10; //Hz
-			
-			
-			// const dataR = speak.raw(saying.text, {
-			// 	profile: 'Cylon',
-			// 	intonation: saying.intonation,
-			// 	language: saying.language
-			// });
-			//
-			// this.getBuffer(dataR, (audioContextR, sourceR) => {
-			//
-			// 	this.scope.loadAudioData(audioContext, source);
-			//
-			// });
-			
-			// this.scope.once('destroy', () => {
-			// 	/*delete src.buffer;
-			// 	delete me.source;
-			// 	delete me.audioContext;*/
-			// });
-			
-			// this.scope.loadAudioData(audioContext, source);
-			// this.scope.play();
-			
-			
 			this.monoScope.loadAudioData(audioContext, source);
-			
-			
-			
-			// debugger;
-			//debugger;
 		});
-		
-		
-		
-		
-		//
-		// this.audioContext = new AudioContext();
-		// const audioCtx = this.audioContext;
-		// this.source = this.audioContext.createBufferSource();
-		// const src = this.source;
-		//
-		// //alert('diconnect / reconnect not working');
-		//
-		// // this.scope = new AudioScope(this.canvasRef.current);
-		//
-		// const me = this;
-		// audioCtx.decodeAudioData(data, function(buffer) {
-		// 	src.buffer = buffer;
-		//
-		// 	me.scope.on('destroy', () => {
-		// 		delete src.buffer;
-		// 		delete me.source;
-		// 		delete me.audioContext;
-		// 	});
-		//
-		// 	me.scope.loadAudioData(audioCtx, src, buffer);
-		//
-		// 	me.scope.play(); //.start(0);
-		// }, function(e) {
-		// 	console.log('error', e);
-		// });
-		
-		// this.source.buffer = data;
-		// this.source.connect(this.context.destination);
-		// debugger;
-		// this.source.start(0);
-		
-		
 	}
-	
-	// say(text) {
-	//   speak.setLanguage(this.state.language);
-	//   speak.setProfile(this.state.voiceProfile);
-	//   speak.say(text, {
-	//     intonation: this.state.intonation
-	//   });
-	// }
 	
 	onChangeText(e) {
 		this.setState({
 			text: e.target.value
+		}, () => {
+			this.updateCode();
 		});
 	}
 	
-	daisybell() {
-		// _Speak.meSpeak.speak('day', {variant:'m4', pitch:70, speed:100})
-		// _Speak.meSpeak.speak('zee', {variant:'m4', pitch:50, speed:100})
+	generateCode(i) {
+		let saying;
+		if (i === null) saying = this.state;
+		else saying = this.state.spoken[i];
+		
+		const voice_id = Speak.getLanguageId(saying.language);
+		const voice_uid = saying.language.replace('en/','').replace('-','_');
+		
+		let lang = '';
+		let langimport = '';
+		if (Speak.profiles[saying.profile].engine === 'espeak') {
+			langimport = "import "+voice_uid+" from \"mespeak/voices/"+voice_id+".json\";\n" +
+			"Speak.addLanguages("+voice_uid+");\n";
+			lang = "\tlanguage: \"" + saying.language + "\"\n";
+		}
+		
+		let s = "import Speak from \"jaxcore-speak\";\n" +
+			langimport+
+			"var voice = new Speak({\n" +
+			"\tprofile: \""+saying.profile+"\",\n" +
+			lang+
+			"});\n";
+		if (saying.intonation !== 'default') {
+			const intonations = saying.intonation+": true";
+			s += "voice.speak(\""+saying.text+"\", {\n" +
+			"  " + intonations +"\n"+
+			"});";
+		}
+		else {
+			s += "voice.speak(\""+saying.text+"\");";
+		}
+		return s;
 	}
 }
 
