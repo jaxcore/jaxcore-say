@@ -36,8 +36,8 @@ global.Speak = Speak;
 
 // Add a custom ESpeak voice
 Speak.addProfile({
-	"Custom Voice 1": {
-		"name": "Custom Voice 1",
+	"Custom ESpeak Voice": {
+		"name": "Custom ESpeak Voice",
 		"engine": "espeak",
 		"default": {
 			amplitude: 100,
@@ -64,8 +64,8 @@ Speak.addProfile({
 // Add a custom SAM voice
 // Note: in SAM the pitch and speed is inverted relative to ESpeak (eg. use higher pitch number for a deep voice)
 Speak.addProfile({
-	"Custom Voice 2": {
-		"name": "Custom Voice 2",
+	"Custom SAM Voice": {
+		"name": "Custom SAM Voice",
 		"engine": "sam",
 		"default": {
 			speed: 82,
@@ -90,10 +90,10 @@ Speak.addProfile({
 
 Speak.addLanguages(ca, cs, de, en, en_n, en_rp, en_sc, en_us, en_wm, el, eo, es, es_la, fi, fr, hu, it, kn, la, lv, nl, pt, pt_pt, ro, sk, sv, tr, zh, zh_yue);
 
-let speak = new Speak({
+var voice = new Speak({
 	language: 'en_us'
 });
-global.speak = speak;
+global.voice = voice;
 
 
 // test generated code:
@@ -279,7 +279,7 @@ class SpeakApp extends Component {
 	renderProfileSelect() {
 		let o = [];
 		
-		for (let p in speak.profiles) {
+		for (let p in voice.profiles) {
 			o.push((<option key={p} value={p}>{p}</option>));
 		}
 		
@@ -338,9 +338,13 @@ class SpeakApp extends Component {
 		
 		const saying = this.state.spoken[index];
 		
-		let replacements = [
-			['Xenu', 'zee new']
-		];
+		let replacements = [];
+		
+		// this is so the names are pronounced properly (eg. Priss instead of Pris)
+		if (Speak.profiles[saying.profile].phoneticName) {
+			replacements.push([saying.profile, Speak.profiles[saying.profile].phoneticName]);
+			debugger;
+		}
 		
 		const options = {
 			profile: saying.profile,
@@ -350,16 +354,17 @@ class SpeakApp extends Component {
 		};
 		if (saying.intonation !== 'default') options[saying.intonation] = true;
 		
+		
 		// this.monoScope.setTheme({
 		// 	color: 'orange',
 		// 	// clipColor: 'white',
 		// 	// background: 'black'
 		// });
 		// speak.setVisualizer(this.monoScope);
+		voice.visualizer = this.monoScope;
+		voice.speak(saying.text, options);
 		
-		speak.getAudioData(saying.text, options, (audioContext, source) => {
-			this.monoScope.loadAudioData(audioContext, source);
-		});
+		
 	}
 	
 	onChangeText(e) {
@@ -372,11 +377,66 @@ class SpeakApp extends Component {
 	
 	generateCode(i) {
 		let saying;
-		if (i === null) saying = this.state;
+		if (i === null || this.state.spoken.length===0) saying = this.state;
 		else saying = this.state.spoken[i];
 		
 		const voice_id = Speak.getLanguageId(saying.language);
 		const voice_uid = saying.language.replace('en/','').replace('-','_');
+		
+		let custom = '';
+		if (saying.profile === 'Custom ESpeak Voice') {
+			custom = "Speak.addProfile({\n" +
+				"\t\"Custom ESpeak Voice\": {\n" +
+				"\t\t\"name\": \"Custom ESpeak Voice\",\n" +
+				"\t\t\"engine\": \"espeak\",\n" +
+				"\t\t\"default\": {\n" +
+				"\t\t\tamplitude: 100,\n" +
+				"\t\t\twordgap: 1,\n" +
+				"\t\t\tpitch: 40,\n" +
+				"\t\t\tspeed: 150,\n" +
+				"\t\t\tvariant: 'm7'\n" +
+				"\t\t},\n" +
+				"\t\t\"high\": {\n" +
+				"\t\t\tpitch: 55\n" +
+				"\t\t},\n" +
+				"\t\t\"low\": {\n" +
+				"\t\t\tpitch: 5\n" +
+				"\t\t},\n" +
+				"\t\t\"slow\": {\n" +
+				"\t\t\tspeed: 100\n" +
+				"\t\t},\n" +
+				"\t\t\"fast\": {\n" +
+				"\t\t\tspeed: 200\n" +
+				"\t\t}\n" +
+				"\t}\n" +
+				"});\n";
+		}
+		else if (saying.profile === 'Custom SAM Voice') {
+			custom = "Speak.addProfile({\n" +
+				"\t\"Custom SAM Voice\": {\n" +
+				"\t\t\"name\": \"Custom SAM Voice\",\n" +
+				"\t\t\"engine\": \"sam\",\n" +
+				"\t\t\"default\": {\n" +
+				"\t\t\tspeed: 82,\n" +
+				"\t\t\tpitch: 72,\n" +
+				"\t\t\tthroat: 110,\n" +
+				"\t\t\tmouth: 105\n" +
+				"\t\t},\n" +
+				"\t\t\"high\": {\n" +
+				"\t\t\tpitch: 50\n" +
+				"\t\t},\n" +
+				"\t\t\"low\": {\n" +
+				"\t\t\tpitch: 100\n" +
+				"\t\t},\n" +
+				"\t\t\"slow\": {\n" +
+				"\t\t\tspeed: 130\n" +
+				"\t\t},\n" +
+				"\t\t\"fast\": {\n" +
+				"\t\t\tspeed: 60\n" +
+				"\t\t}\n" +
+				"\t}\n" +
+				"});\n";
+		}
 		
 		let lang = '';
 		let langimport = '';
@@ -388,6 +448,7 @@ class SpeakApp extends Component {
 		
 		let s = "import Speak from \"jaxcore-speak\";\n" +
 			langimport+
+			custom+
 			"var voice = new Speak({\n" +
 			"\tprofile: \""+saying.profile+"\",\n" +
 			lang+
