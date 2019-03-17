@@ -1,7 +1,7 @@
 {
   "name": "jaxcore-speak",
   "version": "0.0.1",
-  "description": "Jaxcore Text-To-Speech plugin",
+  "description": "Jaxcore speech synthesis library",
   "main": "lib/speak.js",
   "directories": {
     "lib": "lib"
