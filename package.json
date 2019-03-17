@@ -10,8 +10,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "MIT",
+  "license": "GPL",
   "dependencies": {
-    "sam-js": "^0.0.2"
+    "sam-js": "https://github.com/jaxcore/sam#jsonly"
   }
 }

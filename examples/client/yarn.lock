@@ -5219,6 +5219,20 @@ istanbul-reports@^1.5.1:
   dependencies:
     handlebars "^4.0.3"
 
+jaxcore-client@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/jaxcore-client/-/jaxcore-client-0.0.2.tgz#e8241282d8fce5de3865373274791f89b7c2fdb6"
+  integrity sha512-SBxuG8BFNIPm9URRWoS7f8S6JvaWx21DW5DQdm0Uf/blnvrsVf+PnFnMNxz++iEllC2eBmWeafxQ5MYnHUV0Xg==
+  dependencies:
+    jaxcore-plugin "0.0.2"
+
+jaxcore-plugin@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/jaxcore-plugin/-/jaxcore-plugin-0.0.2.tgz#23174cb9cc9af1c2010e5072e12c88caf58ead1f"
+  integrity sha512-iF89ENWznurn2o+MpSNH6wD6Qpkryxj/9q1IOwJMZjNNM6OzmneSckR2vjuIwLFKMOK/AFWkuDGppDfSNKc62w==
+  dependencies:
+    chalk "^2.4.1"
+
 jest-changed-files@^23.4.2:
   version "23.4.2"
   resolved "https://registry.yarnpkg.com/jest-changed-files/-/jest-changed-files-23.4.2.tgz#1eed688370cd5eebafe4ae93d34bb3b64968fe83"
@@ -8745,11 +8759,6 @@ sockjs@0.3.19:
   dependencies:
     faye-websocket "^0.10.0"
     uuid "^3.0.1"
-
-soundbank-reverb@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/soundbank-reverb/-/soundbank-reverb-1.1.2.tgz#b81b29760b7907b8c8bae10c0d9133d8ec64fbf7"
-  integrity sha1-uBspdgt5B7jIuuEMDZEz2Oxk+/c=
 
 source-list-map@^2.0.0:
   version "2.0.1"

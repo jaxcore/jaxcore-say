@@ -1,0 +1,1 @@
+{"version":3,"sources":["/Users/dstein/dev/jaxcore/jaxcore-speak/examples/client/src/index.css"],"names":[],"mappings":"AAAA,yBACE,cAAgB,CACjB,AAED,IACE,eAAgB,AAChB,UAAe,CAChB","file":"main.866a8263.chunk.css","sourcesContent":["body, button, input, select{\n  font-size: 18px;\n}\n\npre {\n  font-size: 15px;\n  color: #005555;\n}\n\n"]}
