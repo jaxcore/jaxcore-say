@@ -90,25 +90,23 @@ Speak.addProfile({
 
 Speak.addLanguages(ca, cs, de, en, en_n, en_rp, en_sc, en_us, en_wm, el, eo, es, es_la, fi, fr, hu, it, kn, la, lv, nl, pt, pt_pt, ro, sk, sv, tr, zh, zh_yue);
 
-var voice = new Speak({
-	language: 'en_us'
+var speakVoice = new Speak({
+	language: 'en'
 });
-global.voice = voice;
 
 
 // test generated code:
-/*
-import Speak from 'jaxcore-speak';
-import en_us from "jaxcore-speak/voices/en/en-us.json";
-Speak.addLanguages(en_us);
-let voice = new Speak({
-	profile: 'Cylon',
-	language: 'en/en-us'
-});
-voice.speak('hola mi nombre es Cylon', {
-	low: true
-});
-*/
+
+// import Speak from "jaxcore-speak";
+// import es from "jaxcore-speak/voices/es.json";
+// Speak.addLanguages(es);
+// let voice = new Speak({
+// 	profile: 'Cylon',
+// 	language: 'es'
+// });
+// voice.speak("hola mi nombre es Cylon", {
+// 	low: true
+// });
 
 
 class SpeakApp extends Component {
@@ -144,18 +142,19 @@ class SpeakApp extends Component {
 	componentDidMount() {
 		this.updateCode();
 		this.monoScope = new MonauralScope(this.canvasRef.current);
-		voice.setVisualizer(this.monoScope);
+		speakVoice.setVisualizer(this.monoScope);
 	}
 	
 	render() {
 		return (
 			<div>
+				<h2>Jaxcore Speak</h2>
 				<div>
 					<canvas ref={this.canvasRef} width="300" height="300"/>
 				</div>
 				
 				<div>
-					Voice Profile: {this.renderProfileSelect()}
+					Voice: {this.renderProfileSelect()}
 				</div>
 				<div>
 					Speed: {this.renderSpeedSelect()}
@@ -170,7 +169,7 @@ class SpeakApp extends Component {
 				<div>
 					<input size="40" placeholder="Type something then press Enter" onKeyUp={e => this.onKeyUp(e)}
 						   onChange={e => this.onChangeText(e)} value={this.state.text}/>
-					<button onClick={e => this.sayText()}>Speak</button>
+					<button onClick={e => this.sayText(true)}>Speak</button>
 				</div>
 				
 				<ul>
@@ -256,12 +255,12 @@ class SpeakApp extends Component {
 		});
 	}
 	
-	updateCode(i) {
+	updateCode(i, callback) {
 		if (typeof i === 'undefined') i = null;
 		const code = this.generateCode(i);
 		this.setState({
 			code
-		});
+		}, callback);
 	}
 	
 	renderSpeedSelect() {
@@ -298,14 +297,14 @@ class SpeakApp extends Component {
 	
 	renderProfileSelect() {
 		let espeak = [];
-		for (let p in voice.profiles) {
+		for (let p in speakVoice.profiles) {
 			if (Speak.profiles[p].engine === 'espeak') {
 				espeak.push((<option key={p} value={p}>{p}</option>));
 			}
 		}
 		
 		let sam = [];
-		for (let p in voice.profiles) {
+		for (let p in speakVoice.profiles) {
 			if (Speak.profiles[p].engine === 'sam') {
 				sam.push((<option key={p} value={p}>{p}</option>));
 			}
@@ -332,14 +331,15 @@ class SpeakApp extends Component {
 		});
 	}
 	
-	sayText() {
-		const text = this.state.text;
+	sayText(keepText) {
+		let text = this.state.text;
 		if (text.length === 0) return;
 		
 		const profile = this.state.profile;
 		const speed = this.state.speed;
 		const pitch = this.state.pitch;
 		const language = this.state.language;
+		
 		
 		const saying = {
 			text,
@@ -349,19 +349,34 @@ class SpeakApp extends Component {
 			profile
 		};
 		
-		this.updateCode();
+		const previousSaying = this.state.spoken[this.state.spoken.length-1];
+		let isSame = false;
+		if (previousSaying.text === text &&
+			previousSaying.speed === speed &&
+			previousSaying.pitch === pitch &&
+			previousSaying.language === language &&
+			previousSaying.profile === profile) {
+			isSame = true;
+		}
 		
 		const spoken = this.state.spoken;
-		const spokenIndex = this.state.spoken.length;
-		spoken.push(saying);
+		let spokenIndex;
+		if (!isSame) {
+			spokenIndex = this.state.spoken.length;
+			spoken.push(saying);
+		}
+		else spokenIndex = this.state.spoken.length - 1;
+		
+		if (!keepText) text = '';
 		
 		this.setState({
 			spoken,
 			spokenIndex,
-			text: ''
+			text
+		}, () => {
+			this.updateCode();
+			this.sayIndex(spokenIndex);
 		});
-		
-		this.sayIndex(spokenIndex);
 		
 	}
 	
@@ -388,7 +403,7 @@ class SpeakApp extends Component {
 			Pris: '255,255,0',
 			Roy: '0,255,0',
 			Xenu: '255,0,255',
-			Cylon: '255,255,0',
+			Cylon: '128,128,128',
 			Leon: '128,0,0',
 			Rachel: '128,128,0',
 			Zhora: '0,128,0',
@@ -404,9 +419,18 @@ class SpeakApp extends Component {
 		this.monoScope.theme.fillColor = 'rgba('+color+',0.2)';
 		this.monoScope.theme.dotColor = 'rgb('+color+')';
 		
-		voice.speak(saying.text, options);
+		console.log('Speak: started');
 		
-		
+		this.setState({
+			isSpeaking: true
+		}, () => {
+			speakVoice.speak(saying.text, options).then(() => {
+				console.log('Speak: stopped');
+				this.setState({
+					isSpeaking: false
+				});
+			})
+		});
 	}
 	
 	onChangeText(e) {

@@ -21,17 +21,23 @@ npm install jaxcore-speak
 
 
 ```
-import Speak from 'jaxcore-speak';
-import en_us from "jaxcore-speak/voices/en/en-us.json";
-Speak.addLanguages(en_us);
+import Speak from "jaxcore-speak";
+import en from "jaxcore-speak/voices/en/en.json";
+
+Speak.addLanguages(en);
+
 let voice = new Speak({
-	profile: 'Cylon',
-	language: 'en/en-us'
+	profile: "Cylon",
+	language: "en"
 });
-voice.speak('hello my name is Cylon');
+voice.speak("hello my name is Cylon").then(function() {
+  console.log("done");
+});
 ```
 
-### Predefined Voice Profiles
+Unfortunately, web browsers are now disabling Web Audio API by default, so the first usage of `voice.speak()` must be called from a user action such as mouse click or keyboard action.
+
+### Voice Profiles
 
 Jaxcore Speak includes the following predefined ESpeak-based voices:
 
@@ -55,36 +61,35 @@ Custom voices can be generated at run time.  See the source code of the [SpeakAp
 
 ### Intonation
 
-The voice profiles include an easy way to modify the voice to be faster, slower, deeper, higher:
+The voice profiles include an easy way to modify the speed (faster/slower) and pitch (deeper/higher):
 
 ```
 voice.speak('hello world', {
-    fast: true
+  fast: true
 });
 ```
 
 ```
 voice.speak('hello world', {
-    slow: true
+  slow: true
 });
 ```
 
 ```
 voice.speak('hello world', {
-    high: true
+  high: true
 });
 ```
 
 ```
 voice.speak('hello world', {
-    low: true
+  low: true
 });
 ```
-
 
 #### ESpeak Languages
 
-Languages must be loaded individually.  Due their file size it is recommended to only include the languages that are necessary.
+The ESpeak voice profiles require a language to be loaded.  Due their file sizes it is recommended to only include the languages that are necessary.
 
 ```
 import ca from "jaxcore-speak/voices/ca.json";
@@ -130,16 +135,26 @@ Set the desired language while instantiating the Speak object:
 
 ```
 let voice = new Speak({
-    profile: 'Cylon',
-    language: 'en/en-us'
+	profile: "Cylon",
+	language: "es"
 });
+voice.speak("hola mi nombre es Cylon");
 ```
 
 Or switch languages at any time:
 
 ```
-voice.setLanguage('es');
+voice.setLanguage("es");
 ```
+
+Or set the language as a `speak()` option:
+
+```
+voice.speak("bonjour je m'appelle Cylon", {
+  language: "fr"
+});
+```
+
 
 ### Scope Visualization
 
@@ -178,7 +193,7 @@ yarn start
 ```
 
 
-### LICENSE
+## License
 
 Jaxcore Speak is free software released under the GPL License.
 
@@ -189,7 +204,7 @@ However, IANAL (I am not a lawyer) and due to the bizarre combination of depende
 meSpeak (NPM module by Mikola Lysenko):
 [https://github.com/mikolalysenko/mespeak](https://github.com/mikolalysenko/mespeak)
 
-meSpeak (emscriptem port by Norbert Landsteiner):
+meSpeak (emscripten port by Norbert Landsteiner):
 [https://www.masswerk.at/mespeak/](https://www.masswerk.at/mespeak/)
 
 eSpeak [http://espeak.sourceforge.net/](http://espeak.sourceforge.net/)
@@ -206,7 +221,7 @@ SAM-js port by Christian Schiffler
 
 ##### meSpeak License
 
-Jaxcore speak includes modified source code from meSpeak which is GPL and also includes empscripten-compiled eSpeak code which is also GPL.  Therefore this derivative work is available under the GPL.
+Jaxcore speak includes modified source code from meSpeak which is GPL and also includes emscripten-compiled eSpeak code which is also GPL.  Therefore this derivative work is available under the GPL.
 
 ##### sam-js License
 

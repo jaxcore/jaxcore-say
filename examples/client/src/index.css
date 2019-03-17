@@ -1,3 +1,9 @@
+body {
+  font-family: sans-serif;
+}
+H2 {
+  margin-left:2em;
+}
 body, button, input, select{
   font-size: 18px;
 }

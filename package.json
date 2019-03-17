@@ -1,6 +1,6 @@
 {
   "name": "jaxcore-speak",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Jaxcore speech synthesis library",
   "main": "lib/speak.js",
   "directories": {
@@ -9,7 +9,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaxcore/jaxcore-speak"
+  },
+  "homepage": "https://jaxcore.com",
+  "author": "Jaxcore",
   "license": "GPL",
   "dependencies": {
     "sam-js": "https://github.com/jaxcore/sam#jsonly"
