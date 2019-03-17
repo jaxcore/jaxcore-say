@@ -9,7 +9,7 @@ Jaxcore Speak combines both speech synthesis systems through a common API with a
 
 ### Demo
 
-todo
+[https://jaxcore.github.io/jaxcore-speak/](https://jaxcore.github.io/jaxcore-speak/)
 
 ### Installation
 
