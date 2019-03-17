@@ -210,12 +210,14 @@ class SpeakApp extends Component {
 		e.preventDefault();
 		const o = this.state.spoken[i];
 		this.sayIndex(i);
+		const languageEnabled = Speak.profiles[o.profile].engine === 'espeak';
 		this.setState({
 			text: o.text,
 			profile: o.profile,
 			speed: o.speed,
 			pitch: o.pitch,
-			language: o.language
+			language: o.language,
+			languageEnabled
 		}, () => {
 			this.updateCode(i);
 		});

@@ -12,5 +12,6 @@ body, button, input, select{
 pre {
   font-size: 15px;
   color: #005555;
+  line-height: 1em;
 }
 
