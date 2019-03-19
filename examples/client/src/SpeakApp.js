@@ -353,7 +353,7 @@ class SpeakApp extends Component {
 		
 		const previousSaying = this.state.spoken[this.state.spoken.length-1];
 		let isSame = false;
-		if (previousSaying.text === text &&
+		if (previousSaying && previousSaying.text === text &&
 			previousSaying.speed === speed &&
 			previousSaying.pitch === pitch &&
 			previousSaying.language === language &&

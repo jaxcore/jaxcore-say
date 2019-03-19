@@ -1,6 +1,6 @@
 {
   "name": "jaxcore-speak",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Jaxcore speech synthesis library",
   "main": "lib/speak.js",
   "directories": {
