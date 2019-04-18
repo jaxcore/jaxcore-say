@@ -11,6 +11,7 @@
     "build-examples": "npm run build-multiple-example && npm run build-client-example && npm run copy-docs",
     "build-multiple-example": "cd examples/multiplespeakers && npm run build",
     "build-client-example": "cd examples/client && npm run build",
+    "zip-workers": "cd dist && tar cfvz workers.tar.gz *.js",
     "copy-docs": "rm -rf docs/client && rm -rf docs/multiplespeakers && mv examples/multiplespeakers/build docs/multiplespeakers && mv examples/client/build docs/client",
     "copy-workers": "cp -f dist/*.js examples/client/public/webworkers && cp -f dist/*.js examples/multiplespeakers/public/webworkers",
     "build-workers": "rm -rf dist && npm run build-sam-worker && npm run build-all-worker && npm run build-en-worker && npm run build-es-worker && npm run build-fr-worker && npm run copy-workers",

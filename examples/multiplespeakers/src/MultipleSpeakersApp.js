@@ -5,30 +5,26 @@ import {MonauralScope} from 'jaxcore-client';
 global.Speak = Speak;
 
 Speak.setWorkers({
-	
-	// NOTE:
-	
-	// using the "all languages" worker adds 1MB to the size of the build
-	// 'espeak': 'webworkers/espeak-all-worker.js',
+	'espeak': 'webworkers/espeak-all-worker.js',
 	
 	// if you only need one language (english, french, spanish) then only load that worker
 	// 'espeak': 'webworkers/espeak-en-worker.js',
 	
-	// the following format is mainly just for this demo for testing the individual language builds
-	'espeak': [
-		{
-			language: 'en',
-			path: 'webworkers/espeak-en-worker.js'
-		},
-		{
-			language: 'es',
-			path: 'webworkers/espeak-es-worker.js'
-		},
-		{
-			language: 'fr',
-			path: 'webworkers/espeak-fr-worker.js'
-		},
-	],
+	// // the following format is mainly just for this demo for testing the individual language builds
+	// 'espeak': [
+	// 	{
+	// 		language: 'en',
+	// 		path: 'webworkers/espeak-en-worker.js'
+	// 	},
+	// 	{
+	// 		language: 'es',
+	// 		path: 'webworkers/espeak-es-worker.js'
+	// 	},
+	// 	{
+	// 		language: 'fr',
+	// 		path: 'webworkers/espeak-fr-worker.js'
+	// 	},
+	// ],
 	
 	'sam': 'webworkers/sam-worker.js'
 });
@@ -38,6 +34,7 @@ class MultipleSpeakersApp extends Component {
 		super();
 		
 		this.redRef = React.createRef();
+		this.orangeRef = React.createRef();
 		this.yellowRef = React.createRef();
 		this.greenRef = React.createRef();
 		this.cyanRef = React.createRef();
@@ -48,6 +45,7 @@ class MultipleSpeakersApp extends Component {
 			text: '',
 			activeSpeakers: {
 				red: false,
+				orange: false,
 				yellow: false,
 				green: false,
 				cyan: false,
@@ -62,6 +60,7 @@ class MultipleSpeakersApp extends Component {
 	componentDidMount() {
 		const colors = {
 			red: '255,0,0',
+			orange: '255,128,0',
 			yellow: '255,255,0',
 			green: '0,255,0',
 			cyan: '0,255,255',
@@ -82,6 +81,7 @@ class MultipleSpeakersApp extends Component {
 		
 		this.scopes = {
 			red: new MonauralScope(this.redRef.current, getTheme('red')),
+			orange: new MonauralScope(this.orangeRef.current, getTheme('orange')),
 			yellow: new MonauralScope(this.yellowRef.current, getTheme('yellow')),
 			green: new MonauralScope(this.greenRef.current, getTheme('green')),
 			cyan: new MonauralScope(this.cyanRef.current, getTheme('cyan')),
@@ -99,6 +99,10 @@ class MultipleSpeakersApp extends Component {
 					<div id="red">
 						<div className={"speakername"+(this.state.activeSpeakers.red?' active':'')}>Jack</div>
 						<canvas ref={this.redRef} width="100" height="100"/>
+					</div>
+					<div id="orange">
+						<div className={"speakername"+(this.state.activeSpeakers.orange?' active':'')}>Scotty</div>
+						<canvas ref={this.orangeRef} width="100" height="100"/>
 					</div>
 					<div id="yellow">
 						<div className={"speakername"+(this.state.activeSpeakers.yellow?' active':'')}>Roy</div>
@@ -152,8 +156,7 @@ class MultipleSpeakersApp extends Component {
 			scope: this.scopes.red,
 			options: {
 				profile: 'Jack',
-				language: 'en',
-				delay: 1
+				language: 'en'
 			},
 			onStart: () => {
 				console.log('Jack saying: ', this.text);
@@ -164,14 +167,31 @@ class MultipleSpeakersApp extends Component {
 				this.setActiveSpeaker('red', false);
 			}
 		});
+		
+		Speak.queue({
+			text: "aye this is scotty, gled to meet you",
+			scope: this.scopes.orange,
+			options: {
+				profile: 'Scotty',
+				language: 'en-sc'
+			},
+			onStart: () => {
+				console.log('Scotty saying: ', this.text);
+				this.setActiveSpeaker('orange', true);
+			},
+			onStop: () => {
+				console.log('Scotty finished saying: ', this.text);
+				this.setActiveSpeaker('orange', false);
+			}
+		});
+		
 
 		Speak.queue({
 			text: "this is roy, at your service",
 			scope: this.scopes.yellow,
 			options: {
 				profile: 'Roy',
-				language: 'en',
-				delay: 1
+				language: 'en-wm'
 			},
 			onStart: () => {
 				console.log('Roy saying: ', this.text);

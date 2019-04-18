@@ -3,62 +3,96 @@ Jaxcore Speak
 
 ![screenshot](https://raw.githubusercontent.com/jaxcore/jaxcore-speak/master/screenshot.png)
 
-A JavaScript speech synthesis library based upon [meSpeak](http://www.masswerk.at/mespeak/) (an emscripten port of [espeak](http://espeak.sourceforge.net/)) and [sam-js](https://github.com/discordier/sam) (a reverse-engineered version of [Software Automatic Mouth](https://en.wikipedia.org/wiki/Software_Automatic_Mouth) for the Commodore 64).
+A JavaScript speech synthesis and visualization system for the web, based upon [meSpeak](http://www.masswerk.at/mespeak/) and [sam-js](https://github.com/discordier/sam).
 
 Jaxcore Speak combines both speech synthesis systems through a common API with an HTML5 canvas-based audio volume display which was partially based on [volume-meter](https://github.com/cwilso/volume-meter).
 
-### Exampoes
+Beware that web browsers are now disabling Web Audio API by default, so the first usage of Jaxcore Speak must be called from a user action such as mouse click or keyboard action.
 
-- Functionality Demo [https://jaxcore.github.io/jaxcore-speak/](https://jaxcore.github.io/jaxcore-speak/client)
-- Multiple Speakers Demo [https://jaxcore.github.io/jaxcore-speak/](https://jaxcore.github.io/jaxcore-speak/multiplespeakers)
 
-### Installation
+### Examples
+
+- Full example: [https://jaxcore.github.io/jaxcore-speak/client/](https://jaxcore.github.io/jaxcore-speak/client)
+- Multiple voices & scopes: [https://jaxcore.github.io/jaxcore-speak/multiplespeakers/](https://jaxcore.github.io/jaxcore-speak/multiplespeakers)
+
+### Installation (NPM module)
 
 ```
 npm install jaxcore-speak
 ```
 
-### Usage (NPM module)
+### Usage
 
+English (US) `en` is the default, but see below for how other languages can be used.
 
 ```
 import Speak from "jaxcore-speak";
-import en from "jaxcore-speak/voices/en/en.json";
 
-Speak.addLanguages(en);
+Speak.setWorkers({
+	'espeak': 'webworkers/espeak-en-worker.js',
+	'sam': 'webworkers/sam-worker.js'
+});
 
 let voice = new Speak({
 	profile: "Cylon",
 	language: "en"
 });
+
 voice.speak("hello my name is Cylon").then(function() {
   console.log("done");
 });
 ```
 
-Unfortunately, web browsers are now disabling Web Audio API by default, so the first usage of `voice.speak()` must be called from a user action such as mouse click or keyboard action.
+### Webworker Usage
+
+As of version v0.0.4, both speech synthesizers are loaded with webworkers which drastically improve memory usage.  The webworker files can be downloaded [here](https://raw.githubusercontent.com/jaxcore/jaxcore-listen/master/dist/workers.tar.gz).  Or to build the worker files clone this repo and run `npm run build-workers`.
+
+The worker js files must be served separately from the NPM module, and the path to the files must be set using the `Speak.setWorkers()` method.
+
+SAM is English only so there is only 1 webworker file for it.
+
+But ESpeak has many language options. For English (US) only use this:
+
+```
+Speak.setWorkers({
+	'espeak': 'webworkers/espeak-en-worker.js',
+	'sam': 'webworkers/sam-worker.js'
+});
+```
+
+For other languages it likely will be better to use the `all` file:
+
+```
+Speak.setWorkers({
+	'espeak': 'webworkers/espeak-all-worker.js',
+	'sam': 'webworkers/sam-worker.js'
+});
+```
+
+Keep in mind, the file sizes of each worker is large.  English (US) is 1.7MB, and all the languages is 2.7MB.  Your webserver requires proper caching of the worker files.
 
 ### Voice Profiles
 
 Jaxcore Speak includes the following predefined ESpeak-based voices:
 
-*Jack
-Pris
-Roy
-Xenu
-Cylon
-Leon
-Rachel
-Zhora*
+* Jack
+* Pris
+* Roy
+* Scotty
+* Xenu
+* Cylon
+* Leon
+* Rachel
+* Zhora
 
 And the following SAM-based voices:
 
-*Sam
-Elf
-Robo
-Granny*
+* Sam
+* Elf
+* Robo
+* Granny
 
-Custom voices can be generated at run time.  See the source code of the [SpeakApp.js](examples/client/src/SpeakApp.js) example for details.
+Custom voices can be generated at run time.  See the source code of [SpeakApp.js](examples/client/src/SpeakApp.js) example for details.
 
 ### Intonation
 
@@ -90,47 +124,38 @@ voice.speak('hello world', {
 
 #### ESpeak Languages
 
-The ESpeak voice profiles require a language to be loaded.  Due their file sizes it is recommended to only include the languages that are necessary.
+The language should be defined while instantiating `new Speak()`, the possible languages are:
 
-```
-import ca from "jaxcore-speak/voices/ca.json";
-import cs from "jaxcore-speak/voices/cs.json";
-import de from "jaxcore-speak/voices/de.json";
-import en from "jaxcore-speak/voices/en/en.json";
-import en_n from "jaxcore-speak/voices/en/en-n.json";
-import en_rp from "jaxcore-speak/voices/en/en-rp.json";
-import en_sc from "jaxcore-speak/voices/en/en-sc.json";
-import en_us from "jaxcore-speak/voices/en/en-us.json";
-import en_wm from "jaxcore-speak/voices/en/en-wm.json";
-import el from "jaxcore-speak/voices/el.json";
-import eo from "jaxcore-speak/voices/eo.json";
-import es from "jaxcore-speak/voices/es.json";
-import es_la from "jaxcore-speak/voices/es-la.json";
-import fi from "jaxcore-speak/voices/fi.json";
-import fr from "jaxcore-speak/voices/fr.json";
-import hu from "jaxcore-speak/voices/hu.json";
-import it from "jaxcore-speak/voices/it.json";
-import kn from "jaxcore-speak/voices/kn.json";
-import la from "jaxcore-speak/voices/la.json";
-import lv from "jaxcore-speak/voices/lv.json";
-import nl from "jaxcore-speak/voices/nl.json";
-import pt from "jaxcore-speak/voices/pt.json";
-import pt_pt from "jaxcore-speak/voices/pt-pt.json";
-import ro from "jaxcore-speak/voices/ro.json";
-import sk from "jaxcore-speak/voices/sk.json";
-import sv from "jaxcore-speak/voices/sv.json";
-import tr from "jaxcore-speak/voices/tr.json";
-import zh from "jaxcore-speak/voices/zh.json";
-import zh_yue from "jaxcore-speak/voices/zh-yue.json";
-```
-
-To add the language data use `Speak.addLanguages()`:
-
-```
-Speak.addLanguages(en);
-Speak.addLanguages(es);
-Speak.addLanguages(fr);
-```
+* ca = Catalan
+* cs = Czech
+* de = German
+* el = Greek
+* en = English
+* en-n = English (N)
+* en-rp = English (RP)
+* en-sc = English (Scottish)
+* en-us = English (US)
+* en-wm = English (WM)
+* eo = Esperanto
+* es = Spanish
+* es-la = Spanish (Latin America)
+* fi = Finnish
+* fr = French
+* hu = Hungarian
+* it = Italian
+* kn = Kannada
+* la = Latin
+* lv = Latvian
+* nl = Dutch
+* pl = Polish
+* pt = Portuguese (Brazil)
+* pt-pt = Portuguese, European
+* ro = Romanian
+* sk = Slovak
+* sv = Swedish
+* tr = Turkish
+* zh = Chinese (Mandarin)
+* zh-yue = Chinese (Cantonese)
 
 Set the desired language while instantiating the Speak object:
 
@@ -156,6 +181,7 @@ voice.speak("bonjour je m'appelle Cylon", {
 });
 ```
 
+But remember, if 
 
 ### Scope Visualization
 
@@ -192,6 +218,17 @@ cd examples/client
 yarn install
 yarn start
 ```
+
+## Speaker Queue
+
+New feature as of v0.0.4.
+
+The Speaker Queue allows multiple Speak/Scope dictations to be queued up and played one by one and receive start/stop events for UI updates while that "speaker" is speaking.
+
+See the [multiplespeakers](https://jaxcore.github.io/jaxcore-speak/multiplespeakers) for an example of this in action.
+
+
+
 
 
 ## License

@@ -33,24 +33,28 @@ pre {
     left: 0px;
 }
 
-#yellow .speakername {
+#orange .speakername {
     left: 100px;
 }
 
-#green .speakername {
+#yellow .speakername {
     left: 200px;
 }
 
-#cyan .speakername {
+#green .speakername {
     left: 300px;
 }
 
-#blue .speakername {
+#cyan .speakername {
     left: 400px;
 }
 
-#purple .speakername {
+#blue .speakername {
     left: 500px;
+}
+
+#purple .speakername {
+    left: 600px;
 }
 
 .speakername {

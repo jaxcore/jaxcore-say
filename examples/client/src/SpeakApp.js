@@ -67,6 +67,12 @@ Speak.setWorkers({
 // Speak.setWorkers({
 // 	'espeak': '/webworkers/espeak-en-worker.js',
 // });
+// Speak.setWorkers({
+// 	'espeak': '/webworkers/espeak-es-worker.js',
+// });
+// Speak.setWorkers({
+// 	'espeak': '/webworkers/espeak-fr-worker.js',
+// });
 
 var speakVoice = new Speak({
 	language: 'en'
@@ -92,7 +98,7 @@ class SpeakApp extends Component {
 					speed: 'default',
 					pitch: 'default',
 					text: 'Hello World',
-					language: 'en/en-us'
+					language: 'en/en'
 				}
 			],
 			spokenIndex: null,
@@ -473,11 +479,21 @@ class SpeakApp extends Component {
 		let lang = '';
 		let langimport = '';
 		if (Speak.profiles[saying.profile].engine === 'espeak') {
-			langimport = "import "+voice_uid+" from \"jaxcore-speak/voices/"+voice_id+".json\";\n" +
-			"Speak.addLanguages("+voice_uid+");\n";
 			lang = "\tlanguage: \"" + saying.language + "\"\n";
 		}
 		
+		if (voice_id === 'en/en') {
+			langimport = 'Speak.setWorkers({\n' +
+				'\t\'espeak\': \'webworkers/espeak-en-worker.js\',\n' +
+				'\t\'sam\': \'webworkers/sam-worker.js\'\n' +
+				'});\n';
+		}
+		else {
+			langimport = 'Speak.setWorkers({\n' +
+				'\t\'espeak\': \'webworkers/espeak-all-worker.js\',\n' +
+				'\t\'sam\': \'webworkers/sam-worker.js\'\n' +
+				'});\n';
+		}
 		let s = "import Speak from \"jaxcore-speak\";\n" +
 			langimport+
 			custom+
