@@ -7,7 +7,12 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-workers": "rm -rf dist && npm run build-sam-worker && npm run build-en-worker && npm run build-es-worker && npm run build-fr-worker",
+    "build-sam-worker": "webpack --env=sam && cat tools/webworkers/sam-interface.js >> dist/sam-worker.js && cp dist/sam-worker.js examples/multiplespeakers/public/webworkers",
+    "build-en-worker": "webpack --env=en && cat tools/webworkers/espeak-interface.js >> dist/espeak-en-worker.js && cp dist/espeak-en-worker.js examples/multiplespeakers/public/webworkers",
+    "build-es-worker": "webpack --env=es && cat tools/webworkers/espeak-interface.js >> dist/espeak-es-worker.js && cp dist/espeak-es-worker.js examples/multiplespeakers/public/webworkers",
+    "build-fr-worker": "webpack --env=fr && cat tools/webworkers/espeak-interface.js >> dist/espeak-fr-worker.js && cp dist/espeak-fr-worker.js examples/multiplespeakers/public/webworkers"
   },
   "repository": {
     "type": "git",
