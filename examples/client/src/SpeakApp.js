@@ -2,36 +2,6 @@ import React, {Component} from 'react';
 import Speak from 'jaxcore-speak';
 import {MonauralScope} from 'jaxcore-client';
 
-import ca from "jaxcore-speak/voices/ca.json";
-import cs from "jaxcore-speak/voices/cs.json";
-import de from "jaxcore-speak/voices/de.json";
-import en from "jaxcore-speak/voices/en/en.json";
-import en_n from "jaxcore-speak/voices/en/en-n.json";
-import en_rp from "jaxcore-speak/voices/en/en-rp.json";
-import en_sc from "jaxcore-speak/voices/en/en-sc.json";
-import en_us from "jaxcore-speak/voices/en/en-us.json";
-import en_wm from "jaxcore-speak/voices/en/en-wm.json";
-import el from "jaxcore-speak/voices/el.json";
-import eo from "jaxcore-speak/voices/eo.json";
-import es from "jaxcore-speak/voices/es.json";
-import es_la from "jaxcore-speak/voices/es-la.json";
-import fi from "jaxcore-speak/voices/fi.json";
-import fr from "jaxcore-speak/voices/fr.json";
-import hu from "jaxcore-speak/voices/hu.json";
-import it from "jaxcore-speak/voices/it.json";
-import kn from "jaxcore-speak/voices/kn.json";
-import la from "jaxcore-speak/voices/la.json";
-import lv from "jaxcore-speak/voices/lv.json";
-import nl from "jaxcore-speak/voices/nl.json";
-import pt from "jaxcore-speak/voices/pt.json";
-import pt_pt from "jaxcore-speak/voices/pt-pt.json";
-import ro from "jaxcore-speak/voices/ro.json";
-import sk from "jaxcore-speak/voices/sk.json";
-import sv from "jaxcore-speak/voices/sv.json";
-import tr from "jaxcore-speak/voices/tr.json";
-import zh from "jaxcore-speak/voices/zh.json";
-import zh_yue from "jaxcore-speak/voices/zh-yue.json";
-
 global.Speak = Speak;
 
 // Add a custom ESpeak voice
@@ -88,26 +58,20 @@ Speak.addProfile({
 	}
 });
 
-Speak.addLanguages(ca, cs, de, en, en_n, en_rp, en_sc, en_us, en_wm, el, eo, es, es_la, fi, fr, hu, it, kn, la, lv, nl, pt, pt_pt, ro, sk, sv, tr, zh, zh_yue);
+Speak.setWorkers({
+	'espeak': 'webworkers/espeak-all-worker.js',
+	'sam': 'webworkers/sam-worker.js'
+});
+
+// if you only need English, French, or Spanish use the language specific worker build
+// Speak.setWorkers({
+// 	'espeak': '/webworkers/espeak-en-worker.js',
+// });
 
 var speakVoice = new Speak({
 	language: 'en'
 });
-
-
-// test generated code:
-
-// import Speak from "jaxcore-speak";
-// import es from "jaxcore-speak/voices/es.json";
-// Speak.addLanguages(es);
-// let voice = new Speak({
-// 	profile: 'Cylon',
-// 	language: 'es'
-// });
-// voice.speak("hola mi nombre es Cylon", {
-// 	low: true
-// });
-
+global.speakVoice = speakVoice;
 
 class SpeakApp extends Component {
 	constructor() {
@@ -236,7 +200,7 @@ class SpeakApp extends Component {
 	renderLanguageSelect() {
 		if (this.state.languageEnabled) {
 			const o = [];
-			for (let lang in Speak.languages) {
+			for (let lang in Speak.languageIds) {
 				o.push(<option key={lang} value={lang}>{Speak.languageIds[lang]}</option>);
 			}
 			return (<select onChange={e => this.selectLanguage(e)} value={this.state.language}>

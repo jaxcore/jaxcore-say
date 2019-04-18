@@ -1,79 +1,37 @@
 import React, {Component} from 'react';
 import Speak from 'jaxcore-speak';
 import {MonauralScope} from 'jaxcore-client';
-import EventEmitter from 'events';
 
 global.Speak = Speak;
 
 Speak.setWorkers({
+	
+	// NOTE:
+	
+	// using the "all languages" worker adds 1MB to the size of the build
+	// 'espeak': 'webworkers/espeak-all-worker.js',
+	
+	// if you only need one language (english, french, spanish) then only load that worker
+	// 'espeak': 'webworkers/espeak-en-worker.js',
+	
+	// the following format is mainly just for this demo for testing the individual language builds
 	'espeak': [
 		{
 			language: 'en',
-			path: '/webworkers/espeak-en-worker.js'
+			path: 'webworkers/espeak-en-worker.js'
 		},
 		{
 			language: 'es',
-			path: '/webworkers/espeak-es-worker.js'
+			path: 'webworkers/espeak-es-worker.js'
 		},
 		{
 			language: 'fr',
-			path: '/webworkers/espeak-fr-worker.js'
+			path: 'webworkers/espeak-fr-worker.js'
 		},
 	],
-	'sam': '/webworkers/sam-worker.js'
+	
+	'sam': 'webworkers/sam-worker.js'
 });
-
-class SpeakerQueue extends EventEmitter {
-	constructor() {
-		super();
-		this._queue = [];
-		this.speaker = new Speak();
-	}
-	
-	queue(speech) {
-		this._queue.push(speech);
-		this._speakNext();
-	}
-	
-	_speakNext() {
-		if (this.isSpeaking) {
-			return;
-		}
-		let next = this._queue.shift();
-		if (next) {
-			this.isSpeaking = true;
-			
-			this.speaker.getWorkerAudioData(next.text, next.options, (audioContext, source) => {
-				if (next.onStart) {
-					next.onStart(next);
-				}
-				next.scope.loadAudioData(audioContext, source, () => {
-					if (next.onStop) {
-						
-						
-						setTimeout(() => {
-							next.onStop(next);
-						}, 1);
-					}
-					this._onEnded();
-				});
-			});
-		} else {
-			this.emit('finish');
-		}
-	}
-	
-	_onEnded() {
-		this.isSpeaking = false;
-		this._speakNext();
-	}
-}
-
-const speakerQueue = new SpeakerQueue();
-Speak.speakerQueue = speakerQueue;
-Speak.queue = speakerQueue.queue.bind(speakerQueue);
-Speak.on = speakerQueue.on.bind(speakerQueue);
-Speak.once = speakerQueue.once.bind(speakerQueue);
 
 class MultipleSpeakersApp extends Component {
 	constructor() {
@@ -88,8 +46,14 @@ class MultipleSpeakersApp extends Component {
 		
 		this.state = {
 			text: '',
-			count: 0,
-			loop: false
+			activeSpeakers: {
+				red: false,
+				yellow: false,
+				green: false,
+				cyan: false,
+				blue: false,
+				purple: false
+			}
 		};
 		
 		global.app = this;
@@ -133,59 +97,54 @@ class MultipleSpeakersApp extends Component {
 				
 				<div id="scopes">
 					<div id="red">
-						<div className="speakername">Jack</div>
+						<div className={"speakername"+(this.state.activeSpeakers.red?' active':'')}>Jack</div>
 						<canvas ref={this.redRef} width="100" height="100"/>
 					</div>
 					<div id="yellow">
-						<div className="speakername">Roy</div>
+						<div className={"speakername"+(this.state.activeSpeakers.yellow?' active':'')}>Roy</div>
 						<canvas ref={this.yellowRef} width="100" height="100"/>
 					</div>
 					<div id="green">
-						<div className="speakername">Leon</div>
+						<div className={"speakername"+(this.state.activeSpeakers.green?' active':'')}>Leon</div>
 						<canvas ref={this.greenRef} width="100" height="100"/>
 					</div>
 					<div id="cyan">
-						<div className="speakername">Robo</div>
+						<div className={"speakername"+(this.state.activeSpeakers.cyan?' active':'')}>Robo</div>
 						<canvas ref={this.cyanRef} width="100" height="100"/>
 					</div>
 					<div id="blue">
-						<div className="speakername">Zhora</div>
+						<div className={"speakername"+(this.state.activeSpeakers.blue?' active':'')}>Zhora</div>
 						<canvas ref={this.blueRef} width="100" height="100"/>
 					</div>
 					<div id="purple">
-						<div className="speakername">Cylon</div>
+						<div className={"speakername"+(this.state.activeSpeakers.purple?' active':'')}>Cylon</div>
 						<canvas ref={this.purpleRef} width="100" height="100"/>
 					</div>
 				
 				</div>
 				
 				<div id="controls">
-					
 					<button onClick={e => this.introduceYourselves()}>Introduce Yourselves</button>
-					
-					<br/>
-					loop: <input type="checkbox" value={this.state.loop} onChange={e => {
-					this.setState({loop: !this.state.loop})
-				}}/>
-					{this.state.count > 0 ? this.state.count : ''}
-				
+					<button onClick={e => this.clearQueue()}>Stop</button>
 				</div>
 			</div>
 		);
 	}
 	
+	clearQueue() {
+		Speak.clearQueue();
+	}
+	
+	setActiveSpeaker(color, active) {
+		const {activeSpeakers} = this.state;
+		activeSpeakers[color] = active;
+		this.setState(activeSpeakers);
+	}
+	
 	introduceYourselves() {
-		this.setState({
-			count: this.state.count + 1
-		});
 		
-		speakerQueue.once('finish', () => {
+		Speak.once('finish', () => {
 			console.log('queue finished');
-			if (this.state.loop) {
-				setTimeout(() => {
-					this.introduceYourselves();
-				}, 1);
-			}
 		});
 		
 		Speak.queue({
@@ -196,11 +155,13 @@ class MultipleSpeakersApp extends Component {
 				language: 'en',
 				delay: 1
 			},
-			onStart: function () {
-				console.log('saying: ', this.text)
+			onStart: () => {
+				console.log('Jack saying: ', this.text);
+				this.setActiveSpeaker('red', true);
 			},
-			onStop: function () {
-				console.log('finished saying: ', this.text)
+			onStop: () => {
+				console.log('Jack finished saying: ', this.text);
+				this.setActiveSpeaker('red', false);
 			}
 		});
 
@@ -212,11 +173,13 @@ class MultipleSpeakersApp extends Component {
 				language: 'en',
 				delay: 1
 			},
-			onStart: function () {
-				console.log('saying: ', this.text)
+			onStart: () => {
+				console.log('Roy saying: ', this.text);
+				this.setActiveSpeaker('yellow', true);
 			},
-			onStop: function () {
-				console.log('finished saying: ', this.text)
+			onStop: () => {
+				console.log('Roy finished saying: ', this.text);
+				this.setActiveSpeaker('yellow', false);
 			}
 		});
 
@@ -227,11 +190,13 @@ class MultipleSpeakersApp extends Component {
 				profile: 'Leon',
 				language: 'es'
 			},
-			onStart: function () {
-				console.log('saying: ', this.text)
+			onStart: () => {
+				console.log('Leon saying: ', this.text);
+				this.setActiveSpeaker('green', true);
 			},
-			onStop: function () {
-				console.log('finished saying: ', this.text)
+			onStop: () => {
+				console.log('Leon finished saying: ', this.text);
+				this.setActiveSpeaker('green', false);
 			}
 		});
 		
@@ -241,11 +206,13 @@ class MultipleSpeakersApp extends Component {
 			options: {
 				profile: 'Robo'
 			},
-			onStart: function() {
-				console.log('saying: ', this.text)
+			onStart: () => {
+				console.log('Robo saying: ', this.text);
+				this.setActiveSpeaker('cyan', true);
 			},
-			onStop: function() {
-				console.log('finished saying: ', this.text)
+			onStop: () => {
+				console.log('Robo finished saying: ', this.text);
+				this.setActiveSpeaker('cyan', false);
 			}
 		});
 
@@ -256,11 +223,13 @@ class MultipleSpeakersApp extends Component {
 				profile: 'Zhora',
 				language: 'fr'
 			},
-			onStart: function () {
-				console.log('saying: ', this.text)
+			onStart: () => {
+				console.log('Zhora saying: ', this.text);
+				this.setActiveSpeaker('blue', true);
 			},
-			onStop: function () {
-				console.log('finished saying: ', this.text)
+			onStop: () => {
+				console.log('Zhora finished saying: ', this.text);
+				this.setActiveSpeaker('blue', false);
 			}
 		});
 
@@ -271,11 +240,13 @@ class MultipleSpeakersApp extends Component {
 				profile: 'Cylon',
 				language: 'en'
 			},
-			onStart: function () {
-				console.log('saying: ', this.text)
+			onStart: () => {
+				console.log('Cylon aying: ', this.text);
+				this.setActiveSpeaker('purple', true);
 			},
-			onStop: function () {
-				console.log('finished saying: ', this.text)
+			onStop: () => {
+				console.log('Cylon finished saying: ', this.text);
+				this.setActiveSpeaker('purple', false);
 			}
 		});
 		

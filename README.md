@@ -7,9 +7,10 @@ A JavaScript speech synthesis library based upon [meSpeak](http://www.masswerk.a
 
 Jaxcore Speak combines both speech synthesis systems through a common API with an HTML5 canvas-based audio volume display which was partially based on [volume-meter](https://github.com/cwilso/volume-meter).
 
-### Demo
+### Exampoes
 
-[https://jaxcore.github.io/jaxcore-speak/](https://jaxcore.github.io/jaxcore-speak/)
+- Functionality Demo [https://jaxcore.github.io/jaxcore-speak/](https://jaxcore.github.io/jaxcore-speak/client)
+- Multiple Speakers Demo [https://jaxcore.github.io/jaxcore-speak/](https://jaxcore.github.io/jaxcore-speak/multiplespeakers)
 
 ### Installation
 
