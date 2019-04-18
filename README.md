@@ -23,7 +23,7 @@ npm install jaxcore-speak
 
 ### Usage
 
-English (US) `en` is the default, but see below for how other languages can be used.
+English `en` is the default, but see below for how other languages can be used.
 
 ```
 import Speak from "jaxcore-speak";
