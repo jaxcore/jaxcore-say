@@ -419,7 +419,6 @@ class SpeakApp extends Component {
 		else saying = this.state.spoken[i];
 		
 		const voice_id = Speak.getLanguageId(saying.language);
-		const voice_uid = saying.language.replace('en/','').replace('-','_');
 		
 		let custom = '';
 		if (saying.profile === 'Custom ESpeak Voice') {
