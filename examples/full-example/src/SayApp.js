@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Say from 'jaxcore-say';
-import {MonauralScope} from 'jaxcore-client';
+import {MonauralScope} from 'jaxcore-say';
 
 global.Say = Say;
 

@@ -186,14 +186,8 @@ But remember, if
 
 ### Scope Visualization
 
-Install MonauralScope from jaxcore-client:
-
 ```
-npm install jaxcore-client
-```
-
-```
-import {MonauralScope} from 'jaxcore-client';
+import {MonauralScope} from 'jaxcore-say';
 ```
 
 Include a canvas element somewhere in your page:
