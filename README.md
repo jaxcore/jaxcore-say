@@ -201,7 +201,7 @@ And use the `setVisualizer()` method:
 var canvasElement = document.getElementById('scope');
 var monoScope = new MonauralScope(canvasElement);
 
-voice.setVisualizer(this.monoScope);
+voice.setVisualizer(monoScope);
 ```	
 
 ### Run examples locally:
