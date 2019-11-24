@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import Speak from 'jaxcore-speak';
+import Say from 'jaxcore-say';
 import {MonauralScope} from 'jaxcore-client';
 
-global.Speak = Speak;
+global.Say = Say;
 
-Speak.setWorkers({
+Say.setWorkers({
 	'espeak': 'webworkers/espeak-all-worker.js',
 	
 	// if you only need one language (english, french, spanish) then only load that worker
@@ -136,7 +136,7 @@ class MultipleSpeakersApp extends Component {
 	}
 	
 	clearQueue() {
-		Speak.clearQueue();
+		Say.clearQueue();
 	}
 	
 	setActiveSpeaker(color, active) {
@@ -147,11 +147,11 @@ class MultipleSpeakersApp extends Component {
 	
 	introduceYourselves() {
 		
-		Speak.once('finish', () => {
+		Say.once('finish', () => {
 			console.log('queue finished');
 		});
 		
-		Speak.queue({
+		Say.queue({
 			text: "hello, i am jack",
 			scope: this.scopes.red,
 			options: {
@@ -168,7 +168,7 @@ class MultipleSpeakersApp extends Component {
 			}
 		});
 		
-		Speak.queue({
+		Say.queue({
 			text: "aye this is scotty, gled to meet you",
 			scope: this.scopes.orange,
 			options: {
@@ -186,7 +186,7 @@ class MultipleSpeakersApp extends Component {
 		});
 		
 
-		Speak.queue({
+		Say.queue({
 			text: "this is roy, at your service",
 			scope: this.scopes.yellow,
 			options: {
@@ -203,7 +203,7 @@ class MultipleSpeakersApp extends Component {
 			}
 		});
 
-		Speak.queue({
+		Say.queue({
 			text: "hola, mi nombre es leon",
 			scope: this.scopes.green,
 			options: {
@@ -220,7 +220,7 @@ class MultipleSpeakersApp extends Component {
 			}
 		});
 		
-		Speak.queue({
+		Say.queue({
 			text: "greetings, i am robo",
 			scope: this.scopes.cyan,
 			options: {
@@ -236,7 +236,7 @@ class MultipleSpeakersApp extends Component {
 			}
 		});
 
-		Speak.queue({
+		Say.queue({
 			text: "bonjour. je m'appelle zhora",
 			scope: this.scopes.blue,
 			options: {
@@ -253,7 +253,7 @@ class MultipleSpeakersApp extends Component {
 			}
 		});
 
-		Speak.queue({
+		Say.queue({
 			text: "we are the cylon",
 			scope: this.scopes.purple,
 			options: {

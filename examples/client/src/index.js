@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import SpeakApp from './SpeakApp';
+import SayApp from './SayApp';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<SpeakApp />, document.getElementById('root'));
+ReactDOM.render(<SayApp />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

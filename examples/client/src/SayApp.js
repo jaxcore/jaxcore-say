@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import Speak from 'jaxcore-speak';
+import Say from 'jaxcore-say';
 import {MonauralScope} from 'jaxcore-client';
 
-global.Speak = Speak;
+global.Say = Say;
 
 // Add a custom ESpeak voice
-Speak.addProfile({
+Say.addProfile({
 	"Custom ESpeak Voice": {
 		"name": "Custom ESpeak Voice",
 		"engine": "espeak",
@@ -33,7 +33,7 @@ Speak.addProfile({
 
 // Add a custom SAM voice
 // Note: in SAM the pitch and speed is inverted relative to ESpeak (eg. use higher pitch number for a deep voice)
-Speak.addProfile({
+Say.addProfile({
 	"Custom SAM Voice": {
 		"name": "Custom SAM Voice",
 		"engine": "sam",
@@ -58,28 +58,28 @@ Speak.addProfile({
 	}
 });
 
-Speak.setWorkers({
+Say.setWorkers({
 	'espeak': 'webworkers/espeak-all-worker.js',
 	'sam': 'webworkers/sam-worker.js'
 });
 
 // if you only need English, French, or Spanish use the language specific worker build
-// Speak.setWorkers({
+// Say.setWorkers({
 // 	'espeak': '/webworkers/espeak-en-worker.js',
 // });
-// Speak.setWorkers({
+// Say.setWorkers({
 // 	'espeak': '/webworkers/espeak-es-worker.js',
 // });
-// Speak.setWorkers({
+// Say.setWorkers({
 // 	'espeak': '/webworkers/espeak-fr-worker.js',
 // });
 
-var speakVoice = new Speak({
+var sayVoice = new Say({
 	language: 'en'
 });
-global.speakVoice = speakVoice;
+global.sayVoice = sayVoice;
 
-class SpeakApp extends Component {
+class SayApp extends Component {
 	constructor() {
 		super();
 		
@@ -112,13 +112,13 @@ class SpeakApp extends Component {
 	componentDidMount() {
 		this.updateCode();
 		this.monoScope = new MonauralScope(this.canvasRef.current);
-		speakVoice.setVisualizer(this.monoScope);
+		sayVoice.setVisualizer(this.monoScope);
 	}
 	
 	render() {
 		return (
 			<div>
-				<h2>Jaxcore Speak</h2>
+				<h2>Say</h2>
 				<div>
 					<canvas ref={this.canvasRef} width="300" height="300"/>
 				</div>
@@ -139,7 +139,7 @@ class SpeakApp extends Component {
 				<div>
 					<input size="40" placeholder="Type something then press Enter" onKeyUp={e => this.onKeyUp(e)}
 						   onChange={e => this.onChangeText(e)} value={this.state.text}/>
-					<button onClick={e => this.sayText(true)}>Speak</button>
+					<button onClick={e => this.sayText(true)}>Say</button>
 				</div>
 				
 				<ul>
@@ -180,7 +180,7 @@ class SpeakApp extends Component {
 		e.preventDefault();
 		const o = this.state.spoken[i];
 		this.sayIndex(i);
-		const languageEnabled = Speak.profiles[o.profile].engine === 'espeak';
+		const languageEnabled = Say.profiles[o.profile].engine === 'espeak';
 		this.setState({
 			text: o.text,
 			profile: o.profile,
@@ -206,8 +206,8 @@ class SpeakApp extends Component {
 	renderLanguageSelect() {
 		if (this.state.languageEnabled) {
 			const o = [];
-			for (let lang in Speak.languageIds) {
-				o.push(<option key={lang} value={lang}>{Speak.languageIds[lang]}</option>);
+			for (let lang in Say.languageIds) {
+				o.push(<option key={lang} value={lang}>{Say.languageIds[lang]}</option>);
 			}
 			return (<select onChange={e => this.selectLanguage(e)} value={this.state.language}>
 				{o}
@@ -269,15 +269,15 @@ class SpeakApp extends Component {
 	
 	renderProfileSelect() {
 		let espeak = [];
-		for (let p in speakVoice.profiles) {
-			if (Speak.profiles[p].engine === 'espeak') {
+		for (let p in sayVoice.profiles) {
+			if (Say.profiles[p].engine === 'espeak') {
 				espeak.push((<option key={p} value={p}>{p}</option>));
 			}
 		}
 		
 		let sam = [];
-		for (let p in speakVoice.profiles) {
-			if (Speak.profiles[p].engine === 'sam') {
+		for (let p in sayVoice.profiles) {
+			if (Say.profiles[p].engine === 'sam') {
 				sam.push((<option key={p} value={p}>{p}</option>));
 			}
 		}
@@ -294,7 +294,7 @@ class SpeakApp extends Component {
 	
 	selectProfile(e) {
 		const profile = e.target.options[e.target.selectedIndex].value;
-		const languageEnabled = Speak.profiles[profile].engine === 'espeak';
+		const languageEnabled = Say.profiles[profile].engine === 'espeak';
 		this.setState({
 			profile,
 			languageEnabled
@@ -358,8 +358,8 @@ class SpeakApp extends Component {
 		let replacements = [];
 		
 		// this is so the names are pronounced properly (eg. Priss instead of Pris)
-		if (Speak.profiles[saying.profile].phoneticName) {
-			replacements.push([saying.profile, Speak.profiles[saying.profile].phoneticName]);
+		if (Say.profiles[saying.profile].phoneticName) {
+			replacements.push([saying.profile, Say.profiles[saying.profile].phoneticName]);
 		}
 		
 		const options = {
@@ -391,13 +391,13 @@ class SpeakApp extends Component {
 		this.monoScope.theme.fillColor = 'rgba('+color+',0.2)';
 		this.monoScope.theme.dotColor = 'rgb('+color+')';
 		
-		console.log('Speak: started');
+		console.log('Say: started');
 		
 		this.setState({
 			isSpeaking: true
 		}, () => {
-			speakVoice.speak(saying.text, options).then(() => {
-				console.log('Speak: stopped');
+			sayVoice.say(saying.text, options).then(() => {
+				console.log('Say: stopped');
 				this.setState({
 					isSpeaking: false
 				});
@@ -418,11 +418,11 @@ class SpeakApp extends Component {
 		if (i === null || this.state.spoken.length===0) saying = this.state;
 		else saying = this.state.spoken[i];
 		
-		const voice_id = Speak.getLanguageId(saying.language);
+		const voice_id = Say.getLanguageId(saying.language);
 		
 		let custom = '';
 		if (saying.profile === 'Custom ESpeak Voice') {
-			custom = "Speak.addProfile({\n" +
+			custom = "Say.addProfile({\n" +
 				"\t\"Custom ESpeak Voice\": {\n" +
 				"\t\t\"name\": \"Custom ESpeak Voice\",\n" +
 				"\t\t\"engine\": \"espeak\",\n" +
@@ -449,7 +449,7 @@ class SpeakApp extends Component {
 				"});\n";
 		}
 		else if (saying.profile === 'Custom SAM Voice') {
-			custom = "Speak.addProfile({\n" +
+			custom = "Say.addProfile({\n" +
 				"\t\"Custom SAM Voice\": {\n" +
 				"\t\t\"name\": \"Custom SAM Voice\",\n" +
 				"\t\t\"engine\": \"sam\",\n" +
@@ -477,18 +477,18 @@ class SpeakApp extends Component {
 		
 		let lang = '';
 		let langimport = '';
-		if (Speak.profiles[saying.profile].engine === 'espeak') {
+		if (Say.profiles[saying.profile].engine === 'espeak') {
 			lang = "\tlanguage: \"" + saying.language + "\"\n";
 		}
 		
 		if (voice_id === 'en/en') {
-			langimport = 'Speak.setWorkers({\n' +
+			langimport = 'Say.setWorkers({\n' +
 				'\t\'espeak\': \'webworkers/espeak-en-worker.js\',\n' +
 				'\t\'sam\': \'webworkers/sam-worker.js\'\n' +
 				'});\n';
 		}
 		else {
-			langimport = 'Speak.setWorkers({\n' +
+			langimport = 'Say.setWorkers({\n' +
 				'\t\'espeak\': \'webworkers/espeak-all-worker.js\',\n' +
 				'\t\'sam\': \'webworkers/sam-worker.js\'\n' +
 				'});\n';
@@ -496,19 +496,19 @@ class SpeakApp extends Component {
 		let s = "import Speak from \"jaxcore-speak\";\n" +
 			langimport+
 			custom+
-			"var voice = new Speak({\n" +
+			"var voice = new Say({\n" +
 			"\tprofile: \""+saying.profile+"\",\n" +
 			lang+
 			"});\n";
 		
 		if (saying.speed === 'default' && saying.pitch === 'default') {
-			s += "voice.speak(\""+saying.text+"\");";
+			s += "voice.say(\""+saying.text+"\");";
 		}
 		else {
 			let intonations = [];
 			if (saying.speed !== 'default') intonations.push("  " + saying.speed+": true");
 			if (saying.pitch !== 'default') intonations.push("  " + saying.pitch+": true");
-			s += "voice.speak(\""+saying.text+"\", {\n" +
+			s += "voice.say(\""+saying.text+"\", {\n" +
 				intonations.join(",\n")+"\n"+
 				"});";
 		}
@@ -517,4 +517,4 @@ class SpeakApp extends Component {
 	}
 }
 
-export default SpeakApp;
+export default SayApp;

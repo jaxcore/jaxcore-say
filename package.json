@@ -1,8 +1,8 @@
 {
-  "name": "jaxcore-speak",
-  "version": "0.0.4",
+  "name": "jaxcore-say",
+  "version": "0.0.1",
   "description": "Jaxcore speech synthesis library",
-  "main": "lib/speak.js",
+  "main": "index.js",
   "directories": {
     "lib": "lib"
   },
@@ -23,11 +23,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jaxcore/jaxcore-speak"
+    "url": "https://github.com/jaxcore/jaxcore-say"
   },
   "homepage": "https://jaxcore.com",
   "author": "Jaxcore",
-  "license": "GPL",
+  "license": "GPL-3.0",
   "devDependencies": {
     "sam-js": "https://github.com/jaxcore/sam#jsonly"
   }
