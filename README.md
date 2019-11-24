@@ -93,7 +93,7 @@ And the following SAM-based voices:
 * Robo
 * Granny
 
-Custom voices can be generated at run time.  See the source code of [SpeakApp.js](examples/client/src/SpeakApp.js) example for details.
+Custom voices can be generated at run time.  See the source code of [SayApp.js](examples/full-example/src/SayApp.js) example for details.
 
 ### Intonation
 
