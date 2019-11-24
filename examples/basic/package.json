@@ -1,12 +1,11 @@
 {
-  "name": "jaxcore-speak-client",
+  "name": "jaxcore-say-basic-example",
   "version": "0.0.0",
   "dependencies": {
     "jaxcore-client": "^0.0.4",
-    "jaxcore-say": "^0.0.1",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
-    "react-scripts": "^2.1.8"
+    "react-scripts": "^3.2.0"
   },
   "scripts": {
     "start": "react-scripts start",

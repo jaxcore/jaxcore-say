@@ -1,0 +1,17 @@
+body {
+  font-family: sans-serif;
+  line-height:1.5em;
+}
+H2 {
+  margin-left:130px;
+}
+body, button, input, select{
+  font-size: 18px;
+}
+
+pre {
+  font-size: 15px;
+  color: #005555;
+  line-height: 1em;
+}
+
