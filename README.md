@@ -1,24 +1,25 @@
-Jaxcore Speak
+Jaxcore Say
 =======
 
-![screenshot](https://raw.githubusercontent.com/jaxcore/jaxcore-speak/master/screenshot.png)
+![screenshot](https://raw.githubusercontent.com/jaxcore/jaxcore-say/master/screenshot.png)
 
 A JavaScript speech synthesis and visualization system for the web, based upon [meSpeak](http://www.masswerk.at/mespeak/) and [sam-js](https://github.com/discordier/sam).
 
-Jaxcore Speak combines both speech synthesis systems through a common API with an HTML5 canvas-based audio volume display which was partially based on [volume-meter](https://github.com/cwilso/volume-meter).
+Jaxcore Say combines both speech synthesis systems through a common API with an HTML5 canvas-based audio volume display which was partially based on [volume-meter](https://github.com/cwilso/volume-meter).
 
-Beware that web browsers are now disabling Web Audio API by default, so the first usage of Jaxcore Speak must be called from a user action such as mouse click or keyboard action.
+Beware that web browsers are now disabling Web Audio API by default, so the first usage of Jaxcore Say must be called from a user action such as mouse click or keyboard action.
 
 
 ### Examples
 
-- Full example: [https://jaxcore.github.io/jaxcore-speak/client/](https://jaxcore.github.io/jaxcore-speak/client)
-- Multiple voices & scopes: [https://jaxcore.github.io/jaxcore-speak/multiplespeakers/](https://jaxcore.github.io/jaxcore-speak/multiplespeakers)
+- Basic example: [https://jaxcore.github.io/jaxcore-say/basic-example/](https://jaxcore.github.io/jaxcore-say/basic-example)
+- Full example: [https://jaxcore.github.io/jaxcore-say/client-example/](https://jaxcore.github.io/jaxcore-say/full-example)
+- Multiple voices & scopes: [https://jaxcore.github.io/jaxcore-say/multiplevoices-example/](https://jaxcore.github.io/jaxcore-say/multiplevoices-example)
 
 ### Installation (NPM module)
 
 ```
-npm install jaxcore-speak
+npm install jaxcore-say
 ```
 
 ### Usage
@@ -26,19 +27,19 @@ npm install jaxcore-speak
 English `en` is the default, but see below for how other languages can be used.
 
 ```
-import Speak from "jaxcore-speak";
+import Speak from "jaxcore-say";
 
-Speak.setWorkers({
+Say.setWorkers({
 	'espeak': 'webworkers/espeak-en-worker.js',
 	'sam': 'webworkers/sam-worker.js'
 });
 
-let voice = new Speak({
+let voice = new Say({
 	profile: "Cylon",
 	language: "en"
 });
 
-voice.speak("hello my name is Cylon").then(function() {
+voice.say("hello my name is Cylon").then(function() {
   console.log("done");
 });
 ```
@@ -47,14 +48,14 @@ voice.speak("hello my name is Cylon").then(function() {
 
 As of version v0.0.4, both speech synthesizers are loaded with webworkers which drastically improve memory usage.  The webworker files can be downloaded [here](https://raw.githubusercontent.com/jaxcore/jaxcore-listen/master/dist/workers.tar.gz).  Or to build the worker files clone this repo and run `npm run build-workers`.
 
-The worker js files must be served separately from the NPM module, and the path to the files must be set using the `Speak.setWorkers()` method.
+The worker js files must be served separately from the NPM module, and the path to the files must be set using the `Say.setWorkers()` method.
 
 SAM is English only so there is only 1 webworker file for it.
 
 But ESpeak has many language options. For English (US) only use this:
 
 ```
-Speak.setWorkers({
+Say.setWorkers({
 	'espeak': 'webworkers/espeak-en-worker.js',
 	'sam': 'webworkers/sam-worker.js'
 });
@@ -63,7 +64,7 @@ Speak.setWorkers({
 For other languages it likely will be better to use the `all` file:
 
 ```
-Speak.setWorkers({
+Say.setWorkers({
 	'espeak': 'webworkers/espeak-all-worker.js',
 	'sam': 'webworkers/sam-worker.js'
 });
@@ -73,7 +74,7 @@ Keep in mind, the file sizes of each worker is large.  English (US) is 1.7MB, an
 
 ### Voice Profiles
 
-Jaxcore Speak includes the following predefined ESpeak-based voices:
+Jaxcore Say includes the following predefined ESpeak-based voices:
 
 * Jack
 * Pris
@@ -99,32 +100,32 @@ Custom voices can be generated at run time.  See the source code of [SpeakApp.js
 The voice profiles include an easy way to modify the speed (faster/slower) and pitch (deeper/higher):
 
 ```
-voice.speak('hello world', {
+voice.say('hello world', {
   fast: true
 });
 ```
 
 ```
-voice.speak('hello world', {
+voice.say('hello world', {
   slow: true
 });
 ```
 
 ```
-voice.speak('hello world', {
+voice.say('hello world', {
   high: true
 });
 ```
 
 ```
-voice.speak('hello world', {
+voice.say('hello world', {
   low: true
 });
 ```
 
 #### ESpeak Languages
 
-The language should be defined while instantiating `new Speak()`, the possible languages are:
+The language should be defined while instantiating `new Say()`, the possible languages are:
 
 * ca = Catalan
 * cs = Czech
@@ -160,11 +161,11 @@ The language should be defined while instantiating `new Speak()`, the possible l
 Set the desired language while instantiating the Speak object:
 
 ```
-let voice = new Speak({
+let voice = new Say({
 	profile: "Cylon",
 	language: "es"
 });
-voice.speak("hola mi nombre es Cylon");
+voice.say("hola mi nombre es Cylon");
 ```
 
 Or switch languages at any time:
@@ -173,10 +174,10 @@ Or switch languages at any time:
 voice.setLanguage("es");
 ```
 
-Or set the language as a `speak()` option:
+Or set the language as a `say()` option:
 
 ```
-voice.speak("bonjour je m'appelle Cylon", {
+voice.say("bonjour je m'appelle Cylon", {
   language: "fr"
 });
 ```
@@ -209,31 +210,37 @@ var monoScope = new MonauralScope(canvasElement);
 voice.setVisualizer(this.monoScope);
 ```	
 
-### Run Example Demo
+### Run examples locally:
 
 Clone this repo, then:
 
 ```
-cd examples/client
-yarn install
-yarn start
+cd examples/basic-example
+npm install
+npm start
+```
+
+### Build all examples
+
+Clone this repo, then:
+
+```
+npm install
+npm run build-all
+cd docs
+python -m SimpleHTTPServer
+// load http://localhost:8000
 ```
 
 ## Speaker Queue
 
-New feature as of v0.0.4.
+The Speaker Queue allows multiple Say instances (voices) to be queued up and played one by one and receive start/stop events for UI updates while that voice is speaking.
 
-The Speaker Queue allows multiple Speak/Scope dictations to be queued up and played one by one and receive start/stop events for UI updates while that "speaker" is speaking.
-
-See the [multiplespeakers](https://jaxcore.github.io/jaxcore-speak/multiplespeakers) for an example of this in action.
-
-
-
-
+See the [multiplevoices](https://jaxcore.github.io/jaxcore-say/multiplevoices-example) for an example of this in action.
 
 ## License
 
-Jaxcore Speak is free software released under the GPL License.
+Jaxcore Say is free software released under the GPL License.
 
 However, IANAL (I am not a lawyer) and due to the bizarre combination of dependencies and the typical use case of compilation/minification into a JavaScript file delivered over the web, the license restrictions are ambiguous.
 
@@ -259,7 +266,7 @@ SAM-js port by Christian Schiffler
 
 ##### meSpeak License
 
-Jaxcore speak includes modified source code from meSpeak which is GPL and also includes emscripten-compiled eSpeak code which is also GPL.  Therefore this derivative work is available under the GPL.
+Jaxcore Say includes modified source code from meSpeak which is GPL and also includes emscripten-compiled eSpeak code which is also GPL.  Therefore this derivative work is available under the GPL.
 
 ##### sam-js License
 
@@ -273,4 +280,4 @@ The company no longer exists. Any attempt to contact the original authors failed
 As long this is the case I cannot put my code under any specific open source software license. However the software might be used under the "Fair Use" act (https://en.wikipedia.org/wiki/FAIR_USE_Act) in the USA.
 ```
 
-Jaxcore Speak will be updated according to any new information that comes to light and it is recommended that any further derivative works/improvement also be independently released under the GPL.
+Jaxcore Say will be updated according to any new information that comes to light and it is recommended that any further derivative works/improvement also be independently released under the GPL.
