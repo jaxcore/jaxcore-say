@@ -62,8 +62,7 @@ class SayApp extends Component {
 	sayText() {
 		const text = this.state.autoplay? this.state.sayText : this.inputRef.current.value;
 		this.setState({
-			isSpeaking: true,
-			autoplay: false
+			isSpeaking: true
 		}, () => {
 			
 			let btext = window.btoa(text);
@@ -73,7 +72,8 @@ class SayApp extends Component {
 			
 			say.say(text, {profile: 'Borg'}).then(() => {
 				this.setState({
-					isSpeaking: false
+					isSpeaking: false,
+					autoplay: false
 				});
 				
 			})
