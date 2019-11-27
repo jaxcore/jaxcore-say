@@ -19,7 +19,7 @@ class SayApp extends Component {
 		let autoplay = false;
 		// the autoplay feature hides the url in base64 encoding (send friends the url)
 		if (document.location.search.startsWith('?say=')) {
-			sayText = decodeURIComponent(atob(document.location.search.substring('?say='.length)));
+			sayText = atob(decodeURIComponent(document.location.search.substring('?say='.length)));
 			autoplay = true;
 		}
 		else sayText = "we are borg... resistance is futile.... your technological and biological distinctiveness will be added to our own"
