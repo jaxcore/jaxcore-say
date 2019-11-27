@@ -15,9 +15,19 @@ var say = new Say({
 class SayApp extends Component {
 	constructor() {
 		super();
+		let sayText;
+		let autoplay = false;
+		// the autoplay feature hides the url in base64 encoding (send friends the url)
+		if (document.location.search.startsWith('?say=')) {
+			sayText = decodeURIComponent(atob(document.location.search.substring('?say='.length)));
+			autoplay = true;
+		}
+		else sayText = "we are borg... resistance is futile.... your technological and biological distinctiveness will be added to our own"
 		
 		this.state = {
-			isSpeaking: false
+			isSpeaking: false,
+			sayText,
+			autoplay
 		};
 		
 		this.inputRef = React.createRef();
@@ -32,8 +42,12 @@ class SayApp extends Component {
 					<form onSubmit={e => {
 						e.preventDefault(); return false;
 					}}>
-						<input ref={this.inputRef} size="70" placeholder="Type something then press Enter"
-							   defaultValue="we are borg... resistance is futile.... your technological and biological distinctiveness will be added to our own"/>
+						
+						{
+							this.state.autoplay? '' : (<input ref={this.inputRef} size="70" placeholder="Type something then press Enter"
+								   value={this.state.sayText} onChange={e => this.setState({sayText: e.target.value})}/>)
+						}
+						
 						<button onClick={e => this.sayText()}>Say</button>
 					</form>
 				</div>
@@ -46,10 +60,14 @@ class SayApp extends Component {
 	}
 	
 	sayText() {
-		const text = this.inputRef.current.value;
+		const text = this.state.autoplay? this.state.sayText : this.inputRef.current.value;
 		this.setState({
-			isSpeaking: true
+			isSpeaking: true,
+			autoplay: false
 		}, () => {
+			
+			let btext = window.btoa(text);
+			window.history.pushState(null, null, '?say='+encodeURIComponent(btext));
 			
 			console.log('Borg: started');
 			
@@ -57,6 +75,7 @@ class SayApp extends Component {
 				this.setState({
 					isSpeaking: false
 				});
+				
 			})
 			
 		});
