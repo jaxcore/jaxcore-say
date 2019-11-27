@@ -25,7 +25,7 @@ class SayApp extends Component {
 	render() {
 		return (
 			<div>
-				<h3>Basic Say Example</h3>
+				<h3>Basic Text-to-Speech Example</h3>
 				
 				<div>
 					<input ref={this.inputRef} size="40" placeholder="Type something then press Enter" defaultValue="Hello World"/>

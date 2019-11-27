@@ -118,7 +118,7 @@ class SayApp extends Component {
 	render() {
 		return (
 			<div>
-				<h2>Say</h2>
+				<h2>Jaxcore Say: Full Example</h2>
 				<div>
 					<canvas ref={this.canvasRef} width="300" height="300"/>
 				</div>
@@ -275,6 +275,8 @@ class SayApp extends Component {
 			}
 		}
 		
+		// espeak.push((<option key={'Borg'} value={'Borg'}>Borg</option>));
+		
 		let sam = [];
 		for (let p in sayVoice.profiles) {
 			if (Say.profiles[p].engine === 'sam') {
@@ -375,7 +377,8 @@ class SayApp extends Component {
 			Pris: '255,255,0',
 			Roy: '0,255,0',
 			Xenu: '255,0,255',
-			Cylon: '128,128,128',
+			Cylon: '150,75,0',
+			Borg: '128,128,128',
 			Leon: '128,0,0',
 			Rachel: '128,128,0',
 			Zhora: '0,128,0',

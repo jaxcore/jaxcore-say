@@ -40,6 +40,7 @@ class MultipleSpeakersApp extends Component {
 		this.cyanRef = React.createRef();
 		this.blueRef = React.createRef();
 		this.purpleRef = React.createRef();
+		this.brownRef = React.createRef();
 		
 		this.state = {
 			text: '',
@@ -50,7 +51,8 @@ class MultipleSpeakersApp extends Component {
 				green: false,
 				cyan: false,
 				blue: false,
-				purple: false
+				purple: false,
+				brown: false
 			}
 		};
 		
@@ -66,6 +68,7 @@ class MultipleSpeakersApp extends Component {
 			cyan: '0,255,255',
 			blue: '0,0,255',
 			purple: '255,0,255',
+			brown: '150,75,0'
 		};
 		
 		const getTheme = function (color) {
@@ -86,7 +89,8 @@ class MultipleSpeakersApp extends Component {
 			green: new MonauralScope(this.greenRef.current, getTheme('green')),
 			cyan: new MonauralScope(this.cyanRef.current, getTheme('cyan')),
 			blue: new MonauralScope(this.blueRef.current, getTheme('blue')),
-			purple: new MonauralScope(this.purpleRef.current, getTheme('purple'))
+			purple: new MonauralScope(this.purpleRef.current, getTheme('purple')),
+			brown: new MonauralScope(this.brownRef.current, getTheme('brown'))
 		};
 		
 	}
@@ -95,7 +99,7 @@ class MultipleSpeakersApp extends Component {
 		return (
 			<div>
 				
-				<h3>Multiple Voices</h3>
+				<h3>Multiple Voices Example</h3>
 				
 				<div id="scopes">
 					<div id="red">
@@ -125,6 +129,10 @@ class MultipleSpeakersApp extends Component {
 					<div id="purple">
 						<div className={"speakername"+(this.state.activeSpeakers.purple?' active':'')}>Cylon</div>
 						<canvas ref={this.purpleRef} width="100" height="100"/>
+					</div>
+					<div id="brown">
+						<div className={"speakername"+(this.state.activeSpeakers.brown?' active':'')}>Borg</div>
+						<canvas ref={this.brownRef} width="100" height="100"/>
 					</div>
 				
 				</div>
@@ -269,6 +277,23 @@ class MultipleSpeakersApp extends Component {
 			onStop: () => {
 				console.log('Cylon finished saying: ', this.text);
 				this.setActiveSpeaker('purple', false);
+			}
+		});
+		
+		Say.queue({
+			text: "we are the borg",
+			scope: this.scopes.brown,
+			options: {
+				profile: 'Borg',
+				language: 'en'
+			},
+			onStart: () => {
+				console.log('Borg aying: ', this.text);
+				this.setActiveSpeaker('brown', true);
+			},
+			onStop: () => {
+				console.log('Borg finished saying: ', this.text);
+				this.setActiveSpeaker('brown', false);
 			}
 		});
 		

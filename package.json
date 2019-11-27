@@ -1,6 +1,6 @@
 {
   "name": "jaxcore-say",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Jaxcore speech synthesis library",
   "main": "index.js",
   "directories": {
@@ -8,16 +8,18 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-examples": "npm run build-multiple && npm run build-full && npm run build-basic && npm run copy-docs",
+    "build-examples": "npm run build-multiple && npm run build-full && npm run build-basic && npm run build-borg && npm run copy-docs",
     "build-multiple": "cd examples/multiplevoices-example && npm run build",
     "build-full": "cd examples/full-example && npm run build",
     "build-basic": "cd examples/basic-example && npm run build",
+    "build-borg": "cd examples/borg-example && npm run build",
     "zip-workers": "cd dist && tar cfvz workers.tar.gz *.js",
-    "copy-docs": "rm -rf docs/client && rm -rf docs/multiplevoices-example && rm -rf docs/full-example &&  rm -rf docs/basic-example && mv examples/multiplevoices-example/build docs/multiplevoices-example && mv examples/full-example/build docs/full-example && mv examples/basic-example/build docs/basic-example",
+    "copy-docs": "rm -rf docs/multiplevoices-example && rm -rf docs/full-example && rm -rf docs/basic-example && rm -rf docs/borg-example && mv examples/multiplevoices-example/build docs/multiplevoices-example && mv examples/full-example/build docs/full-example && mv examples/basic-example/build docs/basic-example && mv examples/borg-example/build docs/borg-example",
+    "copy-workers-borg": "rm -f examples/borg-example/public/webworkers/* && cp -f dist/*.js examples/borg-example/public/webworkers",
     "copy-workers-basic": "rm -f examples/basic-example/public/webworkers/* && cp -f dist/*.js examples/basic-example/public/webworkers",
     "copy-workers-full": "rm -f examples/full-example/public/webworkers/* && cp -f dist/*.js examples/full-example/public/webworkers",
     "copy-workers-multiple": "rm -f examples/multiple-example/public/webworkers/* && cp -f dist/*.js examples/multiplevoices-example/public/webworkers",
-    "copy-workers": "npm run copy-workers-basic && npm run copy-workers-full && npm run copy-workers-multiple",
+    "copy-workers": "npm run copy-workers-borg && npm run copy-workers-basic && npm run copy-workers-full && npm run copy-workers-multiple",
     "build-workers": "rm -rf dist && npm run build-sam-worker && npm run build-all-worker && npm run build-en-worker && npm run build-es-worker && npm run build-fr-worker && npm run zip-workers && npm run copy-workers",
     "build-sam-worker": "webpack --env=sam && cat tools/webworkers/sam-interface.js >> dist/sam-worker.js",
     "build-all-worker": "webpack --env=all && cat tools/webworkers/espeak-interface.js >> dist/espeak-all-worker.js",
@@ -35,5 +37,8 @@
   "license": "GPL-3.0",
   "devDependencies": {
     "sam-js": "https://github.com/jaxcore/sam#jsonly"
+  },
+  "dependencies": {
+    "async": "^3.1.0"
   }
 }

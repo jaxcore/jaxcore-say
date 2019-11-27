@@ -13,6 +13,7 @@ Beware that web browsers are now disabling Web Audio API by default, so the firs
 ### Examples
 
 - Basic example: [https://jaxcore.github.io/jaxcore-say/basic-example/](https://jaxcore.github.io/jaxcore-say/basic-example)
+- Borg Voice example: [https://jaxcore.github.io/jaxcore-say/borg-example/](https://jaxcore.github.io/jaxcore-say/borg-example)
 - Full example: [https://jaxcore.github.io/jaxcore-say/client-example/](https://jaxcore.github.io/jaxcore-say/full-example)
 - Multiple voices & scopes: [https://jaxcore.github.io/jaxcore-say/multiplevoices-example/](https://jaxcore.github.io/jaxcore-say/multiplevoices-example)
 
@@ -85,6 +86,7 @@ Jaxcore Say includes the following predefined ESpeak-based voices:
 * Leon
 * Rachel
 * Zhora
+* Borg (a combination of other espeak voices)
 
 And the following SAM-based voices:
 

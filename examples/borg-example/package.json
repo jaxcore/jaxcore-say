@@ -1,9 +1,8 @@
 {
-  "name": "jaxcore-say-basic-example",
+  "name": "jaxcore-say-borg-example",
   "version": "0.0.0",
   "dependencies": {
-    "async": "^3.1.0",
-    "jaxcore-say": "0.0.1",
+    "jaxcore-say": "0.0.2",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-scripts": "^3.2.0"
