@@ -28,7 +28,7 @@ npm install jaxcore-say
 English `en` is the default, but see below for how other languages can be used.
 
 ```
-import Speak from "jaxcore-say";
+import Say from "jaxcore-say";
 
 Say.setWorkers({
 	'espeak': 'webworkers/espeak-en-worker.js',
@@ -160,7 +160,7 @@ The language should be defined while instantiating `new Say()`, the possible lan
 * zh = Chinese (Mandarin)
 * zh-yue = Chinese (Cantonese)
 
-Set the desired language while instantiating the Speak object:
+Set the desired language while instantiating the Say object:
 
 ```
 let voice = new Say({
@@ -228,9 +228,9 @@ python -m SimpleHTTPServer
 // load http://localhost:8000
 ```
 
-## Speaker Queue
+## Say Queue
 
-The Speaker Queue allows multiple Say instances (voices) to be queued up and played one by one and receive start/stop events for UI updates while that voice is speaking.
+The Say Queue allows multiple Say instances (voices) to be queued up and played one by one and receive start/stop events for UI updates while that voice is speaking.
 
 See the [multiplevoices](https://jaxcore.github.io/jaxcore-say/multiplevoices-example) for an example of this in action.
 
