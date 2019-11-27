@@ -47,7 +47,7 @@ voice.say("hello my name is Cylon").then(function() {
 
 ### Webworker Usage
 
-As of version v0.0.4, both speech synthesizers are loaded with webworkers which drastically improve memory usage.  The webworker files can be downloaded [here](https://raw.githubusercontent.com/jaxcore/jaxcore-listen/master/dist/workers.tar.gz).  Or to build the worker files clone this repo and run `npm run build-workers`.
+Both speech synthesizers are loaded with webworkers which drastically improve memory usage.  The webworker files can be downloaded [here](https://raw.githubusercontent.com/jaxcore/jaxcore-listen/master/dist/workers.tar.gz).  Or to build the worker files clone this repo and run `npm run build-workers`.
 
 The worker js files must be served separately from the NPM module, and the path to the files must be set using the `Say.setWorkers()` method.
 
@@ -183,8 +183,6 @@ voice.say("bonjour je m'appelle Cylon", {
   language: "fr"
 });
 ```
-
-But remember, if 
 
 ### Scope Visualization
 
