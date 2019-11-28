@@ -1,16 +1,15 @@
 import React, {Component} from 'react';
 import Say from 'jaxcore-say';
 
-
 Say.setWorkers({
 	'espeak': 'webworkers/espeak-all-worker.js',
 	'sam': 'webworkers/sam-worker.js'
 });
 
 var say = new Say({
-	language: 'en'
+	language: 'en-us'
+	// language: 'fr' // borg voice also supports other languages
 });
-
 
 class SayApp extends Component {
 	constructor() {
@@ -22,7 +21,7 @@ class SayApp extends Component {
 			sayText = atob(decodeURIComponent(document.location.search.substring('?say='.length)));
 			autoplay = true;
 		}
-		else sayText = "we are borg... resistance is futile.... your technological and biological distinctiveness will be added to our own"
+		else sayText = "we are the borg... resistance is futile.... your technological and biological distinctiveness will be added to our own"
 		
 		this.state = {
 			isSpeaking: false,
