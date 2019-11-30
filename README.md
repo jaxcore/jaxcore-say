@@ -1,8 +1,6 @@
 Jaxcore Say
 =======
 
-![screenshot](https://raw.githubusercontent.com/jaxcore/jaxcore-say/master/screenshot.png)
-
 A JavaScript speech synthesis and visualization system for the web, based upon [meSpeak](http://www.masswerk.at/mespeak/) and [sam-js](https://github.com/discordier/sam).
 
 Jaxcore Say combines both speech synthesis systems through a common API with an HTML5 canvas-based audio volume display which was partially based on [volume-meter](https://github.com/cwilso/volume-meter).
@@ -12,10 +10,16 @@ Beware that web browsers are now disabling Web Audio API by default, so the firs
 
 ### Examples
 
-- Basic example: [https://jaxcore.github.io/jaxcore-say/basic-example/](https://jaxcore.github.io/jaxcore-say/basic-example)
-- Borg Voice example: [https://jaxcore.github.io/jaxcore-say/borg-example/](https://jaxcore.github.io/jaxcore-say/borg-example)
-- Full example: [https://jaxcore.github.io/jaxcore-say/client-example/](https://jaxcore.github.io/jaxcore-say/full-example)
-- Multiple voices & scopes: [https://jaxcore.github.io/jaxcore-say/multiplevoices-example/](https://jaxcore.github.io/jaxcore-say/multiplevoices-example)
+- [Basic example](https://jaxcore.github.io/jaxcore-say/basic-example)
+- [Borg Voice example](https://jaxcore.github.io/jaxcore-say/borg-example)
+- [Full example](https://jaxcore.github.io/jaxcore-say/full-example)
+- [Multiple voices & scopes](https://jaxcore.github.io/jaxcore-say/multiplevoices-example)
+
+#### CyberTyper React Component
+
+
+- [CyberTyper](https://github.com/jaxcore/cybertyper) is a ReactJS component for automatically typing tech synchronized with jaxcore-say's speech synthesis
+	- Example: [Blade Runner interrogation](https://jaxcore.github.io/cybertyper/palefire/)
 
 ### Installation (NPM module)
 
