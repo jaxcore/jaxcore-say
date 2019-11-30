@@ -17,9 +17,9 @@ Beware that web browsers are now disabling Web Audio API by default, so the firs
 
 #### CyberTyper React Component
 
+[CyberTyper](https://github.com/jaxcore/cybertyper) is a ReactJS component for automatically typing tech synchronized with jaxcore-say's speech synthesis
 
-- [CyberTyper](https://github.com/jaxcore/cybertyper) is a ReactJS component for automatically typing tech synchronized with jaxcore-say's speech synthesis
-	- Example: [Blade Runner interrogation](https://jaxcore.github.io/cybertyper/palefire/)
+- Example: [Blade Runner interrogation](https://jaxcore.github.io/cybertyper/palefire/)
 
 ### Installation (NPM module)
 
