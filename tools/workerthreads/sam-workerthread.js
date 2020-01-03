@@ -1,4 +1,5 @@
-import {SamProcess, TextToPhonemes} from '../../node_modules/sam-js';
+// import {SamProcess, TextToPhonemes} from '../../node_modules/sam-js';
+import {SamProcess, TextToPhonemes} from 'sam-js';
 function SamData(text, options) {
 	const input = TextToPhonemes(text);
 	options = options || {};
@@ -11,4 +12,4 @@ function SamData(text, options) {
 	
 	return audiodata;
 }
-self.SamData = SamData;
+global.SamData = SamData;

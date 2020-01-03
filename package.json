@@ -1,6 +1,6 @@
 {
   "name": "jaxcore-say",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Jaxcore speech synthesis library",
   "main": "index.js",
   "directories": {
@@ -13,19 +13,20 @@
     "build-full": "cd examples/full-example && npm run build",
     "build-basic": "cd examples/basic-example && npm run build",
     "build-borg": "cd examples/borg-example && npm run build",
-    "zip-workers": "cd dist && tar cfvz workers.tar.gz *.js",
     "copy-docs": "rm -rf docs/multiplevoices-example && rm -rf docs/full-example && rm -rf docs/basic-example && rm -rf docs/borg-example && mv examples/multiplevoices-example/build docs/multiplevoices-example && mv examples/full-example/build docs/full-example && mv examples/basic-example/build docs/basic-example && mv examples/borg-example/build docs/borg-example",
     "copy-workers-borg": "rm -f examples/borg-example/public/webworkers/* && cp -f dist/*.js examples/borg-example/public/webworkers",
     "copy-workers-basic": "rm -f examples/basic-example/public/webworkers/* && cp -f dist/*.js examples/basic-example/public/webworkers",
     "copy-workers-full": "rm -f examples/full-example/public/webworkers/* && cp -f dist/*.js examples/full-example/public/webworkers",
     "copy-workers-multiple": "rm -f examples/multiple-example/public/webworkers/* && cp -f dist/*.js examples/multiplevoices-example/public/webworkers",
     "copy-workers": "npm run copy-workers-borg && npm run copy-workers-basic && npm run copy-workers-full && npm run copy-workers-multiple",
-    "build-workers": "rm -rf dist && npm run build-sam-worker && npm run build-all-worker && npm run build-en-worker && npm run build-es-worker && npm run build-fr-worker && npm run zip-workers && npm run copy-workers",
+    "build-workers": "rm -rf dist && npm run build-sam-worker && npm run build-all-worker && npm run build-en-worker && npm run build-es-worker && npm run build-fr-worker && npm run copy-workers",
     "build-sam-worker": "webpack --env=sam && cat tools/webworkers/sam-interface.js >> dist/sam-worker.js",
     "build-all-worker": "webpack --env=all && cat tools/webworkers/espeak-interface.js >> dist/espeak-all-worker.js",
     "build-en-worker": "webpack --env=en && cat tools/webworkers/espeak-interface.js >> dist/espeak-en-worker.js",
     "build-es-worker": "webpack --env=es && cat tools/webworkers/espeak-interface.js >> dist/espeak-es-worker.js",
     "build-fr-worker": "webpack --env=fr && cat tools/webworkers/espeak-interface.js >> dist/espeak-fr-worker.js",
+    "build-all-workerthread": "webpack --env=workerthreadall && cat tools/workerthreads/espeak-interface-workerthread.js >> dist/espeak-all-workerthread.js",
+    "build-sam-workerthread": "webpack --env=workerthreadsam && cat tools/workerthreads/sam-interface-workerthread.js >> dist/sam-workerthread.js",
     "build-all": "npm run build-workers && npm run build-examples"
   },
   "repository": {

@@ -7,6 +7,10 @@ Jaxcore Say combines both speech synthesis systems through a common API with an 
 
 Beware that web browsers are now disabling Web Audio API by default, so the first usage of Jaxcore Say must be called from a user action such as mouse click or keyboard action.
 
+For a version of this library which works inside NodeJS, refer to:
+
+- [https://github.com/jaxcore/jaxcore-say-node](https://github.com/jaxcore/jaxcore-say-node)
+
 
 ### Examples
 
