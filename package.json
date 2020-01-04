@@ -25,7 +25,7 @@
     "build-en-worker": "webpack --env=en && cat tools/webworkers/espeak-interface.js >> dist/espeak-en-worker.js",
     "build-es-worker": "webpack --env=es && cat tools/webworkers/espeak-interface.js >> dist/espeak-es-worker.js",
     "build-fr-worker": "webpack --env=fr && cat tools/webworkers/espeak-interface.js >> dist/espeak-fr-worker.js",
-    "build-all-workerthread": "webpack --env=workerthreadall && cat tools/workerthreads/espeak-interface-workerthread.js >> dist/espeak-all-workerthread.js",
+    "build-espeak-workerthread": "webpack --env=workerthreadall && cat tools/workerthreads/espeak-interface-workerthread.js >> dist/espeak-all-workerthread.js",
     "build-sam-workerthread": "webpack --env=workerthreadsam && cat tools/workerthreads/sam-interface-workerthread.js >> dist/sam-workerthread.js",
     "build-all": "npm run build-workers && npm run build-examples"
   },
