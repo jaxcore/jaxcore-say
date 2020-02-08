@@ -7,6 +7,7 @@ parentPort.once('message', (message) => {
 			parentPort.postMessage({
 				rawdata: rawdata
 			});
+			parentPort.close();
 			break;
 	}
 });
