@@ -1,6 +1,6 @@
 {
   "name": "jaxcore-say",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Jaxcore speech synthesis library",
   "main": "index.js",
   "directories": {
@@ -19,7 +19,7 @@
     "copy-workers-full": "rm -f examples/full-example/public/webworkers/* && cp -f dist/*.js examples/full-example/public/webworkers",
     "copy-workers-multiple": "rm -f examples/multiple-example/public/webworkers/* && cp -f dist/*.js examples/multiplevoices-example/public/webworkers",
     "copy-workers": "npm run copy-workers-borg && npm run copy-workers-basic && npm run copy-workers-full && npm run copy-workers-multiple",
-    "build-workers": "rm -rf dist && npm run build-sam-worker && npm run build-all-worker && npm run build-en-worker && npm run build-es-worker && npm run build-fr-worker && npm run copy-workers",
+    "build-workers": "rm -rf dist && npm run build-espeak-workerthread && npm run build-sam-workerthread && npm run build-sam-worker && npm run build-all-worker && npm run build-en-worker && npm run build-es-worker && npm run build-fr-worker && npm run copy-workers",
     "build-sam-worker": "webpack --env=sam && cat tools/webworkers/sam-interface.js >> dist/sam-worker.js",
     "build-all-worker": "webpack --env=all && cat tools/webworkers/espeak-interface.js >> dist/espeak-all-worker.js",
     "build-en-worker": "webpack --env=en && cat tools/webworkers/espeak-interface.js >> dist/espeak-en-worker.js",
